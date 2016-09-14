@@ -1,0 +1,28 @@
+g++ -c  -fPIC primality.cpp
+swig -c++ -python primality.i
+g++ -c  -fPIC  primality_wrap.cxx  -I/usr/include/python2.7/
+g++ -shared   -fPIC  -o _primality.so primality.o primality_wrap.o -lmpfr -lgmp -lpython2.7 -I/usr/include/python2.7/ -L/usr/lib/x86_64-linux-gnu/ 
+#g++  -ggdb -o factorize factorize.cpp -I./ -I/usr/include/x86_64-linux-gnu -lmpfr  -L/usr/lib/x86_64-linux-gnu -lboost_system -lgmp -lgmpxx
+g++  -Ofast -o factorize factorize.cpp -I./ -I/usr/include/x86_64-linux-gnu -lmpfr  -L/usr/lib/x86_64-linux-gnu -lboost_system -lgmp -lgmpxx
+#g++  -ggdb -o primality primality.cpp -I./ -I/usr/include/x86_64-linux-gnu -lmpfr  -L/usr/lib/x86_64-linux-gnu -lboost_system -lgmp -lgmpxx
+#clang++  -ggdb -o primality -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx primality.cpp
+#clang++ -Ofast  -o factorize -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx factorize.cpp
+#clang++ -ggdb -o fact -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx fact.cpp
+#clang++ -ggdb -o part -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx partitioner.cpp
+#clang++ -ggdb -o f00 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx f00.cpp
+#clang++ -ggdb -o f01 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx f01.cpp
+#clang++ -ggdb -o f10 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx f10.cpp
+#clang++ -ggdb -o f11 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx f11.cpp
+#clang++ -ggdb -o f8 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx f8.cpp
+#clang++ -g -o riemann2 -I./hiredis -levent -lhiredis -I./ final2.cpp
+#clang++ -g -o riemann -I./hiredis -levent -lhiredis -I./ final.cpp
+#clang++ -g -o epic -I./hiredis -levent -lhiredis -I./ epic.cpp
+#clang++ -ggdb -o factorize1 -I./ -I./hiredis -levent -lhiredis -lboost_system -lgmp -lgmpxx factorize1.cpp
+#clang++ -D_DEBUG -ggdb -o factorize2 -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx factorize2.cpp
+#clang++ -I./hiredis -levent -lhiredis -o repush push.cpp
+#clang++ -I./hiredis -levent -lhiredis -o repush2 push2.cpp
+#clang++ -g -I./hiredis -levent -lhiredis -o pi-repush pi-push.cpp
+#clang++ -g -I./hiredis -levent -lhiredis -o e-repush e-push.cpp
+#clang++ -I./hiredis -levent -lhiredis -o repush push.cpp
+#clang++ -ggdb -o factorize -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx main.cpp
+#clang++ -ggdb -o sp -I./ -I./hiredis -lmpfr -levent -lhiredis -lboost_system -lgmp -lgmpxx main2.cpp
