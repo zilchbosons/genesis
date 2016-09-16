@@ -4,4 +4,4 @@
 
 #clang++ -shared   -fPIC  -o _primality.so primality.o primality_wrap.o -lmpfr -lgmp -lpython -L/Library/Frameworks/Python.framework/Versions/3.5/lib/python3.5/config-3.5m -lpython3.5m -ldl -framework CoreFoundation
 #clang++  -ggdb -o primality primality.cpp -I./ -lmpfr  -lboost_system -lgmp -lgmpxx
-clang++  -ggdb -o factorize factorize.cpp -I./ -lgmp -lgmpxx
+clang++  -ggdb -o factorize factorize.cpp -I./ -lgmp -lgmpxx -lmpfr

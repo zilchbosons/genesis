@@ -22,11 +22,39 @@
 #include <iostream>
 #include <string>
 #include <gmp.h>
+#include <mpfr.h>
 #include <vector>
 #include "common.hpp"
 
 using namespace std;
 
+void generate(char* nn) {
+	std::string str= nn;
+	str += "-out.txt";
+	FILE* fout = fopen(str.c_str(), "w");
+	mpfr_t nt;
+	mpfr_init2(nt, 4096) ;
+	mpfr_t logt;
+	mpfr_init2(logt, 4096);
+	mpz_t tmp;
+	mpz_init(tmp);
+	mpfr_t term;
+	mpfr_init2(term, 4096);
+	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
+	unsigned long long int idx = 0;
+	while (mpfr_cmp_si(nt, 1)  > 0)  {
+		mpfr_log2(logt, nt, MPFR_RNDN);
+		mpfr_trunc(logt, logt);
+		mpfr_get_z(tmp, logt, MPFR_RNDN);
+		char* logval = mpz_get_str(0, 10, tmp);
+		fprintf(fout, "\nIteration:\t%lld \t,\tLog Value:\t%s\n", idx, logval);
+		mpfr_ui_pow(term, 2, logt, MPFR_RNDN);
+		mpfr_sub(nt, nt, term, MPFR_RNDN);
+		++idx;
+	}
+	fclose(fout);
+	return;
+}
 
 int main() {
 	/* Step 1: Reading the Number to be factorized */
@@ -40,8 +68,7 @@ int main() {
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
 
-	int l = strlen(nn);
-
+	generate(nn);
 	fclose(fp);
 	free(nn);
 	return 0;
