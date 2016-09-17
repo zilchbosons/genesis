@@ -29,8 +29,8 @@
 using namespace std;
 
 void generate(char* nn) {
-	std::string str= nn;
-	str += "-out.txt";
+	std::string str= "";
+	str = "out.txt";
 	FILE* fout = fopen(str.c_str(), "w");
 	mpfr_t nt;
 	mpfr_init2(nt, 4096) ;
@@ -47,7 +47,7 @@ void generate(char* nn) {
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
 		char* logval = mpz_get_str(0, 10, tmp);
-		fprintf(fout, "\nIteration:\t%lld \t,\tLog Value:\t%s\n", idx, logval);
+		fprintf(fout, "%s\n", logval);
 		mpfr_ui_pow(term, 2, logt, MPFR_RNDN);
 		mpfr_sub(nt, nt, term, MPFR_RNDN);
 		++idx;
