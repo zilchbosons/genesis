@@ -1,10 +1,9 @@
 #!/usr/bin/python
 import mysql.connector
 
-def getNearestRiemannPrime(cnx, cursor, nn):
+def getNearestRiemannPrime(cnx, cursor, nn, f2):
     ele = int(nn)
     lb = 1
-    f = open("python-out.txt", "w")
     if (ele  > 50 ):
        lb = ele - 50
     ub = ele + 50
@@ -27,10 +26,10 @@ def getNearestRiemannPrime(cnx, cursor, nn):
           if (delta < mindeltaub):
                 mindeltaub = delta
                 mineleub = nk
-    print >>f, (mindeltalb, mindeltaub)
-    f.close()
+    print >>f2, (mindeltalb, mindeltaub)
 
 f=open("./out.txt","r")
+f2 = open("python-out.txt", "w")
 content = f.readlines()
 
 cnx = mysql.connector.connect(user='root', password='secret',
@@ -40,9 +39,11 @@ cursor = cnx.cursor()
 
 for ele in content:
        nn = int(ele)
-       gnn = getNearestRiemannPrime(cnx, cursor, nn)
+       gnn = getNearestRiemannPrime(cnx, cursor, nn, f2)
        rnn = int(str(nn)[::-1]) 
-       _gnn = getNearestRiemannPrime(cnx, cursor, rnn)
+       _gnn = getNearestRiemannPrime(cnx, cursor, rnn, f2)
 
 cursor.close()
 cnx.close()
+f.close()
+f2.close()
