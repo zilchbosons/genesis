@@ -4,13 +4,31 @@ import mysql.connector
 def getNearestRiemannPrime(cnx, cursor, nn):
     ele = int(nn)
     lb = 1
+    f = open("python-out.txt", "w")
     if (ele  > 50 ):
        lb = ele - 50
     ub = ele + 50
     query = ("SELECT zero FROM zeros INNER JOIN primes WHERE prime=zero AND prime BETWEEN " + str(lb)+ " AND " + str(ub) + " AND zero BETWEEN " + str(lb) + " AND " + str(ub))
     cursor.execute(query)
-    for (l)in cursor:
-       print(l[0])
+    mindeltalb = ele
+    minelelb = 0
+    mindeltaub = ele
+    mineleub = 0
+    for (l) in cursor:
+       nk = int(l[0])
+       delta = nk - nn
+       if (delta > 0):
+          delta = abs(delta) 
+          if (delta < mindeltalb):
+                mindeltalb = -delta
+                minelelb = nk
+       else:
+          delta = abs(delta) 
+          if (delta < mindeltaub):
+                mindeltaub = delta
+                mineleub = nk
+    print >>f, (mindeltalb, mindeltaub)
+    f.close()
 
 f=open("./out.txt","r")
 content = f.readlines()
