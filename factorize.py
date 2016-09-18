@@ -26,7 +26,7 @@ def getNearestRiemannPrime(cnx, cursor, nn, f2):
           if (delta < mindeltaub):
                 mindeltaub = delta
                 mineleub = nk
-    print >>f2, (-mindeltalb, mindeltaub)
+    print >>f2, (mindeltalb, mindeltaub)
 
 f=open("./out.txt","r")
 f2 = open("python-out.txt", "w")
