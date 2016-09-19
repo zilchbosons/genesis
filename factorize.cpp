@@ -42,7 +42,7 @@ void generate(char* nn) {
 	mpfr_init2(term, 4096);
 	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
 	unsigned long long int idx = 0;
-	while (mpfr_cmp_si(nt, 1)  > 0)  {
+	while (mpfr_cmp_si(nt, 0)  > 0)  {
 		mpfr_log2(logt, nt, MPFR_RNDN);
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
