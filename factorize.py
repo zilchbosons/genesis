@@ -5,9 +5,7 @@ import sys
 def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos, bwd_neg):
     ele = int(nn)
 #   print(ele)
-    lb = ele
-    if (ele  > 100 ):
-       lb = ele - 100
+    lb = 1
     ub = ele + 60
     query = ("SELECT zero FROM zeros INNER JOIN primes WHERE prime=zero AND prime BETWEEN " + str(lb)+ " AND " + str(ub) + " AND zero BETWEEN " + str(lb) + " AND " + str(ub))
     cursor.execute(query)
