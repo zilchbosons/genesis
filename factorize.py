@@ -58,9 +58,11 @@ for el1, el2, el3, el4 in zip(fwd_pos, fwd_neg, bwd_pos[::-1], bwd_neg[::-1]):
      consolidated_list2.append([el3,el4])
 
 
-for el1, el2, el3, el4 in zip(consolidated_list1, consolidated_list2, consolidated_list1[::-1], consolidated_list2[::-1]):
+for el1, el2 in zip(consolidated_list1, consolidated_list2):
      print(el1, "==>", el2)
      print("...")
+
+for el3, el4 in zip(consolidated_list1[::-1], consolidated_list2[::-1]):
      print(el3, "==>", el4)
      print("...")
 
