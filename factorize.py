@@ -50,15 +50,14 @@ for ele in content:
        gnn = getNearestRiemannPrime(cnx, cursor, nn, f2, 1, fwd_pos, fwd_neg, bwd_pos, bwd_neg)
        rnn = int(str(nn)[::-1]) 
        _gnn = getNearestRiemannPrime(cnx, cursor, rnn, f2, 0, fwd_pos, fwd_neg, bwd_pos, bwd_neg)
-print("Forward Lists:")
-for el1, el2 in zip(fwd_pos, fwd_neg):
-   print(el1, el2)
- 
-print("Backward Lists:")
-for el1, el2 in zip(bwd_pos, bwd_neg):
-   print(el1, el2)
+print("Lists:")
+for el1, el2, el3, el4 in zip(fwd_pos, fwd_neg, bwd_pos[::-1], bwd_neg[::-1]):
+    print(el1, el2)
+    print "==> "
+    print(el3, el4)
+    print "..."
  
 cursor.close()
 cnx.close()
 f.close()
-f2.close()
+#f2.close()
