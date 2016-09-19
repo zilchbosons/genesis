@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import mysql.connector
 
-def getNearestRiemannPrime(cnx, cursor, nn, f2):
+def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos, bwd_neg):
     ele = int(nn)
     lb = 1
     if (ele  > 50 ):
@@ -26,23 +26,38 @@ def getNearestRiemannPrime(cnx, cursor, nn, f2):
           if (delta < mindeltaub):
                 mindeltaub = delta
                 mineleub = nk
-    print >>f2, (mindeltalb, mindeltaub)
+#   print >>f2, (mindeltalb, mindeltaub)
+    if (flag == 1):
+       fwd_neg.append(mindeltalb)
+       fwd_pos.append(mindeltaub)
+    else:
+       bwd_neg.append(mindeltalb)
+       bwd_pos.append(mindeltaub)
 
 f=open("./out.txt","r")
-f2 = open("python-out.txt", "w")
+f2 = None #open("python-out.txt", "w")
 content = f.readlines()
-
 cnx = mysql.connector.connect(user='root', password='secret',
                               host='127.0.0.1',
                               database='intfact')
 cursor = cnx.cursor()
-
+fwd_pos = []
+fwd_neg = []
+bwd_pos = []
+bwd_neg = []
 for ele in content:
        nn = int(ele)
-       gnn = getNearestRiemannPrime(cnx, cursor, nn, f2)
+       gnn = getNearestRiemannPrime(cnx, cursor, nn, f2, 1, fwd_pos, fwd_neg, bwd_pos, bwd_neg)
        rnn = int(str(nn)[::-1]) 
-       _gnn = getNearestRiemannPrime(cnx, cursor, rnn, f2)
-
+       _gnn = getNearestRiemannPrime(cnx, cursor, rnn, f2, 0, fwd_pos, fwd_neg, bwd_pos, bwd_neg)
+print("Forward Lists:")
+for el1, el2 in zip(fwd_pos, fwd_neg):
+   print(el1, el2)
+ 
+print("Backward Lists:")
+for el1, el2 in zip(bwd_pos, bwd_neg):
+   print(el1, el2)
+ 
 cursor.close()
 cnx.close()
 f.close()
