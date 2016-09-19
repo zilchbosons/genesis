@@ -51,7 +51,7 @@ f=open("./out.txt","r")
 f2 = open("python-out.txt", "w")
 content = f.readlines()
 cnx = mysql.connector.connect(user='root', password='secret',
-                              host='127.0.0.1',
+                              host='192.168.1.1',
                               database='intfact')
 cursor = cnx.cursor()
 fwd_pos = []
