@@ -32,8 +32,10 @@ def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos,
            fwd_neg.append(mindeltalb)
            fwd_pos.append(mindeltaub)
     else:
-           bwd_neg.append(mindeltalb)
-           bwd_pos.append(mindeltaub)
+           rnn1 = int(str(mindeltalb)[::-1]) 
+           rnn2 = int(str(mindeltaub)[::-1]) 
+           bwd_neg.append(rnn1)
+           bwd_pos.append(rnn2)
 
 f=open("./out.txt","r")
 f2 = open("python-out.txt", "w")
