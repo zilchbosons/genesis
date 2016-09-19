@@ -29,22 +29,10 @@ def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos,
                 mineleub = nk
 #   print >>f2, (minelelb, mineleub)
     if (flag == 1):
-       if (mindeltalb == sys.maxint):
-           fwd_neg.append(-1)
-       else:
            fwd_neg.append(mindeltalb)
-       if (mindeltaub == sys.maxint):
-           fwd_pos.append(-1)
-       else:
            fwd_pos.append(mindeltaub)
     else:
-       if (mindeltalb == sys.maxint):
-           bwd_neg.append(-1)
-       else:
            bwd_neg.append(mindeltalb)
-       if (mindeltaub == sys.maxint):
-           bwd_pos.append(-1)
-       else:
            bwd_pos.append(mindeltaub)
 
 f=open("./out.txt","r")
