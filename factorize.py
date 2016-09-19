@@ -39,7 +39,7 @@ f=open("./out.txt","r")
 f2 = open("python-out.txt", "w")
 content = f.readlines()
 cnx = mysql.connector.connect(user='root', password='secret',
-                              host='192.168.1.1',
+                              host='192.168.1.107',
                               database='intfact')
 cursor = cnx.cursor()
 fwd_pos = []
@@ -64,17 +64,6 @@ for el1, el2 in zip(consolidated_list1, consolidated_list2):
      print(el1, "==>", el2)
      print("...")
 
-print("Evolution")
-
-for el3, el4 in zip(consolidated_list1[::-1], consolidated_list2[::-1]):
-     print(el3, "==>", el4)
-     print("...")
-
-#    print(el1, el2)
-#    print "==> "
-#    print(el3, el4)
-#    print "..."
- 
 cursor.close()
 cnx.close()
 f.close()
