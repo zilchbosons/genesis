@@ -1,22 +1,25 @@
 #!/usr/bin/python
 import mysql.connector
+import sys
 
 def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos, bwd_neg):
     ele = int(nn)
-    lb = 1
-    if (ele  > 50 ):
-       lb = ele - 50
-    ub = ele + 50
+#   print(ele)
+    lb = ele
+    if (ele  > 97 ):
+       lb = ele - 60
+    ub = ele + 60
     query = ("SELECT zero FROM zeros INNER JOIN primes WHERE prime=zero AND prime BETWEEN " + str(lb)+ " AND " + str(ub) + " AND zero BETWEEN " + str(lb) + " AND " + str(ub))
     cursor.execute(query)
-    mindeltalb = ele
+    mindeltalb = sys.maxint
     minelelb = 0
-    mindeltaub = ele
+    mindeltaub = sys.maxint
     mineleub = 0
     for (l) in cursor:
        nk = int(l[0])
-       delta = nk - nn
-       if (delta > 0):
+       delta = nk - ele
+#      print(delta)
+       if (delta > 0) :
           delta = abs(delta) 
           if (delta < mindeltalb):
                 mindeltalb = delta
@@ -26,16 +29,28 @@ def getNearestRiemannPrime(cnx, cursor, nn, f2, flag, fwd_pos, fwd_neg, bwd_pos,
           if (delta < mindeltaub):
                 mindeltaub = delta
                 mineleub = nk
-#   print >>f2, (mindeltalb, mindeltaub)
+#   print >>f2, (minelelb, mineleub)
     if (flag == 1):
-       fwd_neg.append(mindeltalb)
-       fwd_pos.append(mindeltaub)
+       if (mindeltalb == sys.maxint):
+           fwd_neg.append(-1)
+       else:
+           fwd_neg.append(mindeltalb)
+       if (mindeltaub == sys.maxint):
+           fwd_pos.append(-1)
+       else:
+           fwd_pos.append(mindeltaub)
     else:
-       bwd_neg.append(mindeltalb)
-       bwd_pos.append(mindeltaub)
+       if (mindeltalb == sys.maxint):
+           bwd_neg.append(-1)
+       else:
+           bwd_neg.append(mindeltalb)
+       if (mindeltaub == sys.maxint):
+           bwd_pos.append(-1)
+       else:
+           bwd_pos.append(mindeltaub)
 
 f=open("./out.txt","r")
-f2 = None #open("python-out.txt", "w")
+f2 = open("python-out.txt", "w")
 content = f.readlines()
 cnx = mysql.connector.connect(user='root', password='secret',
                               host='127.0.0.1',
@@ -58,9 +73,12 @@ for el1, el2, el3, el4 in zip(fwd_pos, fwd_neg, bwd_pos[::-1], bwd_neg[::-1]):
      consolidated_list2.append([el3,el4])
 
 
+print("Destruction")
 for el1, el2 in zip(consolidated_list1, consolidated_list2):
      print(el1, "==>", el2)
      print("...")
+
+print("Evolution")
 
 for el3, el4 in zip(consolidated_list1[::-1], consolidated_list2[::-1]):
      print(el3, "==>", el4)
@@ -74,4 +92,4 @@ for el3, el4 in zip(consolidated_list1[::-1], consolidated_list2[::-1]):
 cursor.close()
 cnx.close()
 f.close()
-#f2.close()
+f2.close()
