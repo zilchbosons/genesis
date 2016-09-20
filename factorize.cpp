@@ -47,9 +47,11 @@ void generate(char* nn) {
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
 		char* logval = mpz_get_str(0, 10, tmp);
-		fprintf(fout, "%s\n", logval);
 		mpfr_ui_pow(term, 2, logt, MPFR_RNDN);
 		mpfr_sub(nt, nt, term, MPFR_RNDN);
+                mpfr_get_z(tmp, nt, MPFR_RNDN);
+                char* residue = mpz_get_str(0, 10, tmp);
+		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 	}
 	fclose(fout);
