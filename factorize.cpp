@@ -42,76 +42,23 @@ void generate(char* nn) {
 	mpfr_init2(term, 4096);
 	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
 	unsigned long long int idx = 0;
-	bool first = true;
-	mpz_t t_logval;
-	mpz_t t_residue;
-	mpz_init(t_logval);
-	mpz_init(t_residue);
-	mpz_t prev_logval;
-	mpz_t prev_residue;
-	mpz_init(prev_logval);
-	mpz_init(prev_residue);
-	mpfr_t fr_residue;
-	mpfr_init2(fr_residue, 4096);
-	mpfr_t log7;
-	mpfr_init2(log7, 4096);
-	mpfr_set_ui(log7, 7, MPFR_RNDN);
-	mpfr_log(log7, log7, MPFR_RNDN);
-	mpfr_t acc;
-	mpfr_init2(acc, 4096);
-	mpfr_set_si(acc, 0, MPFR_RNDN);
-	mpz_t _logval;
-	mpz_t _residue;
-	mpz_init(_logval);
-	mpz_init(_residue);
-	mpfr_t divisor;
-	mpfr_init2(divisor, 4096);
 	while (mpfr_cmp_si(nt, 0)  > 0)  {
 		mpfr_log2(logt, nt, MPFR_RNDN);
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
-		mpz_set(_logval, tmp);
 		char* logval = mpz_get_str(0, 10, tmp);
 		mpfr_ui_pow(term, 2, logt, MPFR_RNDN);
 		mpfr_sub(nt, nt, term, MPFR_RNDN);
 		mpfr_get_z(tmp, nt, MPFR_RNDN);
-		mpz_set(_residue, tmp);
 		char* residue = mpz_get_str(0, 10, tmp);
-		if (first) {
-			first = false;
-			mpz_set(prev_logval, _logval);
-			mpz_set(prev_residue, _residue);
-		} else {
-			mpz_sub(t_logval, prev_logval, _logval);
-			mpz_sub(t_residue, prev_residue, _residue);
-			mpfr_set_z(fr_residue, t_residue, MPFR_RNDN);
-			mpfr_log(fr_residue, fr_residue, MPFR_RNDN);
-			mpfr_div(fr_residue, fr_residue, log7, MPFR_RNDN);
-			mpfr_set_z(divisor, t_logval, MPFR_RNDN);
-			mpfr_div(fr_residue, fr_residue, divisor,MPFR_RNDN);
-                        mpfr_frac(fr_residue, fr_residue, MPFR_RNDN);
-mpfr_printf("\n%.12RNf\n", fr_residue);
-			mpfr_add(acc, acc, fr_residue, MPFR_RNDN);
-			mpz_set(prev_logval, _logval);
-			mpz_set(prev_residue, _residue);
-		}
-                mpfr_printf("\n%.128RNf\n",acc);
 		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 	}
 	mpz_clear(tmp);
 	mpfr_clear(term);
-	mpz_clear(prev_residue);
-	mpz_clear(prev_logval);
-	mpfr_clear(fr_residue);
 	mpfr_clear(nt);
-	mpz_clear(_residue);
-	mpz_clear(_logval);
 	mpfr_clear(logt);
-	mpfr_clear(divisor);
 	fclose(fout);
-mpfr_printf("\n%.128RNf\n",acc);
-	mpfr_clear(acc);
 	return;
 }
 
