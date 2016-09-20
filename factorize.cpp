@@ -84,15 +84,13 @@ void generate(char* nn) {
 		} else {
 			mpz_sub(t_logval, prev_logval, _logval);
 			mpz_sub(t_residue, prev_residue, _residue);
-		gmp_printf( "\n_logval=\t%Zd\t_residue\t%Zd\n", t_logval, t_residue);
 			mpfr_set_z(fr_residue, t_residue, MPFR_RNDN);
 			mpfr_log(fr_residue, fr_residue, MPFR_RNDN);
 			mpfr_div(fr_residue, fr_residue, log7, MPFR_RNDN);
-mpfr_printf("\n%.12RNf\n", fr_residue);
 			mpfr_set_z(divisor, t_logval, MPFR_RNDN);
 			mpfr_div(fr_residue, fr_residue, divisor,MPFR_RNDN);
-mpfr_printf("\n%.12RNf\n", fr_residue);
                         mpfr_frac(fr_residue, fr_residue, MPFR_RNDN);
+mpfr_printf("\n%.12RNf\n", fr_residue);
 			mpfr_add(acc, acc, fr_residue, MPFR_RNDN);
 			mpz_set(prev_logval, _logval);
 			mpz_set(prev_residue, _residue);
