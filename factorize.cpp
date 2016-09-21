@@ -93,9 +93,9 @@ void generate(char* nn, double logT, FILE* fout) {
 		} else {
 			mpz_sub(termt , prev_logvalt, logvalt);
 			mpz_sub(divt, prev_residuet, residuet);
-			mpfr_set_z(termtf,term, MPFR_RNDN);
+			mpfr_set_z(termtf,termt, MPFR_RNDN);
 			mpfr_set_z(divtf, divt, MPFR_RNDN);
-			mpfr_div(termtf, termtf, divtf);
+			mpfr_div(termtf, termtf, divtf, MPFR_RNDN);
 			mpfr_printf("\nSlope :%.2048RNf\n",termtf);
 			mpfr_add(acctf, acctf, termtf, MPFR_RNDN);
 		}
