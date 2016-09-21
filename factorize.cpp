@@ -54,7 +54,7 @@ void generate(char* nn, double logT, FILE* fout) {
 	mpz_t logvalt;
 	mpz_init(logvalt);
 	mpz_t residuet;
-	mpz_init(resduet);
+	mpz_init(residuet);
 	mpz_t prev_logvalt;
 	mpz_init(prev_logvalt);
 	mpz_t prev_residuet;
