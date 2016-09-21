@@ -50,22 +50,50 @@ void generate(char* nn, double logT, FILE* fout) {
 	mpfr_log(special, special, MPFR_RNDN);
 	fprintf(fout, "\n%f\n", logT);
 	fprintf(fout, "\n========================\n");
+	bool first = true;
+	mpz_t logvalt;
+	mpz_init(logvalt);
+	mpz_t residuet;
+	mpz_init(resduet);
+	mpz_t prev_logvalt;
+	mpz_init(prev_logvalt);
+	mpz_t prev_residuet;
+	mpz_init(prev_residuet);
+	mpz_t termt;
+	mpz_init(termt);
+	mpz_t divt;
+	mpz_init(divt);
+	mpz_t acct;
+	mpz_init(acct);
+	mpz_set_si(acct, 0);
 	while (mpfr_cmp_si(nt, 1)  >= 0)  {
 		mpfr_log(logt, nt, MPFR_RNDN);
 		mpfr_div(logt, logt, special, MPFR_RNDN);
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
+		mpz_set(logvalt, tmp);
 		char* logval = mpz_get_str(0, 10, tmp);
 		mpz_mod_ui(tmp, tmp, 7);
 		int r1 = mpz_get_ui(tmp);
 		mpfr_pow(term, tmp2, logt, MPFR_RNDN);
 		mpfr_sub(nt, nt, term, MPFR_RNDN);
 		mpfr_get_z(tmp, nt, MPFR_RNDN);
+		mpz_set(residuet, tmp);
 		char* residue = mpz_get_str(0, 10, tmp);
 		mpz_mod_ui(tmp, tmp, 7);
 		int r2 = mpz_get_ui(tmp);
 		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
+		if (first) {
+			first = false;
+		} else {
+			mpz_sub(termt , prev_logvalt, logvalt);
+			mpz_sub(divt, prev_residuet, residuet);
+			mpz_div(termt, termt, divt);
+			mpz_add(acct, acct, termt);
+		}
+		mpz_set(prev_logvalt, logvalt);
+		mpz_set(prev_residuet, residuet);
 	}
 	fprintf(fout, "\n========================\n");
 	mpz_clear(tmp);
