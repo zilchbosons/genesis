@@ -30,10 +30,7 @@ using namespace std;
 double  logT[5] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938 };
 
 //#define logT 7
-void generate(char* nn, double logT) {
-	std::string str= "";
-	str = "out.txt";
-	FILE* fout = fopen(str.c_str(), "w");
+void generate(char* nn, double logT, FILE* fout) {
 	mpfr_t nt;
 	mpfr_init2(nt, 4096) ;
 	mpfr_t logt;
@@ -51,6 +48,7 @@ void generate(char* nn, double logT) {
 	mpfr_init2(tmp2, 4096);
 	mpfr_set(tmp2, special, MPFR_RNDN);
 	mpfr_log(special, special, MPFR_RNDN);
+	fprintf(fout, "\n========================\n");
 	while (mpfr_cmp_si(nt, 1)  >= 0)  {
 		mpfr_log(logt, nt, MPFR_RNDN);
 		mpfr_div(logt, logt, special, MPFR_RNDN);
@@ -64,11 +62,11 @@ void generate(char* nn, double logT) {
 		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 	}
+	fprintf(fout, "\n========================\n");
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
 	mpfr_clear(logt);
-	fclose(fout);
 	return;
 }
 
@@ -84,9 +82,11 @@ int main() {
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
 
+	FILE* fout = fopen("out.txt", "w");
 	for (int i = 0; i < 5 ; ++i) {
-		generate(nn, logT[i]);
+		generate(nn, logT[i], fout);
 	}
+	fclose(fout);
 	fclose(fp);
 	free(nn);
 	return 0;
