@@ -48,6 +48,7 @@ void generate(char* nn, double logT, FILE* fout) {
 	mpfr_init2(tmp2, 4096);
 	mpfr_set(tmp2, special, MPFR_RNDN);
 	mpfr_log(special, special, MPFR_RNDN);
+	fprintf(fout, "\n%f\n", logT);
 	fprintf(fout, "\n========================\n");
 	while (mpfr_cmp_si(nt, 1)  >= 0)  {
 		mpfr_log(logt, nt, MPFR_RNDN);
