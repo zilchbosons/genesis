@@ -63,9 +63,13 @@ void generate(char* nn, double logT, FILE* fout) {
 	mpz_init(termt);
 	mpz_t divt;
 	mpz_init(divt);
-	mpz_t acct;
-	mpz_init(acct);
-	mpz_set_si(acct, 0);
+	mpfr_t termtf;
+	mpfr_init2(termtf, 4096);
+	mpfr_t divtf;
+	mpfr_init2(divtf, 4096);
+	mpfr_t acctf;
+	mpfr_init2(acctf, 4096);
+	mpfr_set_si(acctf, 0, MPFR_RNDN);
 	while (mpfr_cmp_si(nt, 1)  >= 0)  {
 		mpfr_log(logt, nt, MPFR_RNDN);
 		mpfr_div(logt, logt, special, MPFR_RNDN);
@@ -89,8 +93,11 @@ void generate(char* nn, double logT, FILE* fout) {
 		} else {
 			mpz_sub(termt , prev_logvalt, logvalt);
 			mpz_sub(divt, prev_residuet, residuet);
-			mpz_div(termt, termt, divt);
-			mpz_add(acct, acct, termt);
+			mpfr_set_z(termtf,term, MPFR_RNDN);
+			mpfr_set_z(divtf, divt, MPFR_RNDN);
+			mpfr_div(termtf, termtf, divtf);
+			mpfr_printf("\nSlope :%.2048RNf\n",termtf);
+			mpfr_add(acctf, acctf, termtf, MPFR_RNDN);
 		}
 		mpz_set(prev_logvalt, logvalt);
 		mpz_set(prev_residuet, residuet);
