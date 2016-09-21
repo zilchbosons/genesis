@@ -27,8 +27,10 @@
 #include "common.hpp"
 
 using namespace std;
+double  logT[5] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938 };
 
-void generate(char* nn) {
+//#define logT 7
+void generate(char* nn, double logT) {
 	std::string str= "";
 	str = "out.txt";
 	FILE* fout = fopen(str.c_str(), "w");
@@ -42,12 +44,20 @@ void generate(char* nn) {
 	mpfr_init2(term, 4096);
 	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
 	unsigned long long int idx = 0;
-	while (mpfr_cmp_si(nt, 0)  > 0)  {
-		mpfr_log2(logt, nt, MPFR_RNDN);
+	mpfr_t special;
+	mpfr_init2(special, 4096);
+	mpfr_set_d(special, logT, MPFR_RNDN);
+	mpfr_t tmp2;
+	mpfr_init2(tmp2, 4096);
+	mpfr_set(tmp2, special, MPFR_RNDN);
+	mpfr_log(special, special, MPFR_RNDN);
+	while (mpfr_cmp_si(nt, 1)  >= 0)  {
+		mpfr_log(logt, nt, MPFR_RNDN);
+		mpfr_div(logt, logt, special, MPFR_RNDN);
 		mpfr_trunc(logt, logt);
 		mpfr_get_z(tmp, logt, MPFR_RNDN);
 		char* logval = mpz_get_str(0, 10, tmp);
-		mpfr_ui_pow(term, 2, logt, MPFR_RNDN);
+		mpfr_pow(term, tmp2, logt, MPFR_RNDN);
 		mpfr_sub(nt, nt, term, MPFR_RNDN);
 		mpfr_get_z(tmp, nt, MPFR_RNDN);
 		char* residue = mpz_get_str(0, 10, tmp);
@@ -74,7 +84,9 @@ int main() {
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
 
-	generate(nn);
+	for (int i = 0; i < 5 ; ++i) {
+		generate(nn, logT[i]);
+	}
 	fclose(fp);
 	free(nn);
 	return 0;
