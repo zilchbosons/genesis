@@ -64,7 +64,7 @@ void generate(char* nn, double logT, FILE* fout) {
 		char* residue = mpz_get_str(0, 10, tmp);
 		mpz_mod_ui(tmp, tmp, 7);
 		int r2 = mpz_get_ui(tmp);
-		fprintf(fout, "%s\t%d\t%s\t%d\n", logval, r1, residue, r2);
+		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 	}
 	fprintf(fout, "\n========================\n");
