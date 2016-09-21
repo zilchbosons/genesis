@@ -96,13 +96,13 @@ void generate(char* nn, double logT, FILE* fout) {
 			mpfr_set_z(termtf,termt, MPFR_RNDN);
 			mpfr_set_z(divtf, divt, MPFR_RNDN);
 			mpfr_div(termtf, termtf, divtf, MPFR_RNDN);
-			mpfr_printf("\nSlope :%.2048RNf\n",termtf);
 			mpfr_add(acctf, acctf, termtf, MPFR_RNDN);
 		}
 		mpz_set(prev_logvalt, logvalt);
 		mpz_set(prev_residuet, residuet);
 	}
 	fprintf(fout, "\n========================\n");
+	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
