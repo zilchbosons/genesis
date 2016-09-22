@@ -12,7 +12,7 @@ app = Flask(__name__)
 @app.route('/factorize', methods= ['GET', 'POST'])
 def factorize():
         if (request.method == 'POST'):
-            return _Factor(str(request.form))
+            return _Factor(str(request.form.get('num')))
         elif (request.method == 'GET'):
             return _Factor(str(request.args.get('num')))
         else:
