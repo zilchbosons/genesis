@@ -1,6 +1,6 @@
 g++ -c  -fPIC factorize.cpp
-swig3.0   -python factorize.i
+swig3.0 -c++  -python factorize.i
 g++ -c  -fPIC  factorize_wrap.cxx  -Wsign-compare -fno-common -DNDEBUG  -I/usr/include/python2.7 -Ofast -Wall
-g++ -shared   -fPIC  -o factorize.so factorize.o factorize_wrap.o -lmpfr -lgmp -lpython2.7 -ldl 
+g++ -shared   -fPIC  -o _factorize.so factorize.o factorize_wrap.o -lmpfr -lgmp -lpython2.7 -ldl 
 #g++  -ggdb -o factorize factorize.cpp -I./ -lmpfr  -lboost_system -lgmp -lgmpxx
 #g++  -Ofast -o factorize factorize.cpp -I./ -lgmp -lgmpxx -lmpfr

@@ -2,18 +2,19 @@
 
 from flask import Flask
 from flask import request
+from _factorize import _Factor
 app = Flask(__name__)
 
 #Temporary Begin
-def _Factor(args):
-   return str(args)
+#def _Factor(args):
+#   return str(args)
 
 @app.route('/factorize', methods= ['GET', 'POST'])
 def factorize():
         if (request.method == 'POST'):
-            return _Factor(request.form)
+            return _Factor(str(request.form))
         elif (request.method == 'GET'):
-            return _Factor(request.args)
+            return _Factor(str(request.args.get('num')))
         else:
             return None
 

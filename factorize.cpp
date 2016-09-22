@@ -55,7 +55,7 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 }
 
 //#define logT 7
-void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
+void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes) {
 	mpfr_t nt;
 	mpfr_init2(nt, 4096) ;
 	mpfr_t logt;
@@ -73,8 +73,8 @@ void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 	mpfr_init2(tmp2, 4096);
 	mpfr_set(tmp2, special, MPFR_RNDN);
 	mpfr_log(special, special, MPFR_RNDN);
-	fprintf(fout, "\n%f\n", logT);
-	fprintf(fout, "\n========================\n");
+	//fprintf(fout, "\n%f\n", logT);
+	//fprintf(fout, "\n========================\n");
 	bool first = true;
 	mpz_t logvalt;
 	mpz_init(logvalt);
@@ -111,7 +111,7 @@ void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 		char* residue = mpz_get_str(0, 10, tmp);
 		mpz_mod_ui(tmp, tmp, 7);
 		int r2 = mpz_get_ui(tmp);
-		fprintf(fout, "%s\t%s\n", logval, residue);
+//		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 		if (first) {
 			first = false;
@@ -126,7 +126,7 @@ void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 		mpz_set(prev_logvalt, logvalt);
 		mpz_set(prev_residuet, residuet);
 	}
-	fprintf(fout, "\n========================\n");
+//	fprintf(fout, "\n========================\n");
 	//	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
@@ -170,11 +170,12 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 
 }
 
-char* factorize(char* nn) {
-	FILE* fout = fopen("out.txt", "w");
+char* _Factor(char* nn) {
+//	FILE* fout = fopen("out.txt", "w");
+	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	for (int i = 0; i < 5 ; ++i) {
-		generate(nn, logT[i], fout, slopes);
+		generate(nn, logT[i], /*fout,*/ slopes);
 	}
 #if 0
 	cout <<"\nSlopes Recorded are:\t\n";
@@ -182,7 +183,7 @@ char* factorize(char* nn) {
 #endif
 	char* hmean = calculateHarmonicMean(slopes);
         cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
-	fclose(fout);
+//	fclose(fout);
         return hmean;
 }
 
