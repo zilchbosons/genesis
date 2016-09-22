@@ -198,7 +198,6 @@ int main() {
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
         char* hmean = factorize(nn);
-        cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
 	fclose(fp);
 	free(nn);
 	return 0;
