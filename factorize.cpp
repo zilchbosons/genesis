@@ -55,9 +55,49 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 }
 
 char* rotate(char* tSlope, int index) {
-   mpfr_t st;
-   mpfr_init(st);
-   return tSlope;
+	char f1 = tSlope[0];
+	int l = strlen(tSlope);
+	char* ts = 0;
+	bool canonical = false;
+	if (f1 == '0') {
+		ts = new char[l+5];
+		strncpy(ts, tSlope, l+4); 
+		ts[l+4] = '\0';
+	} else {
+		canonical = true;
+		ts = new char[l+3];
+		strncpy(ts, tSlope, l+2); 
+		ts[l+2] = '\0';
+		char* ts2 = common::reverse_string(ts);
+		delete [] ts;
+		ts = ts2;
+	}
+	mpfr_t st;
+	mpfr_init2(st, 4096);
+	mpfr_set_str(st, ts, 10, MPFR_RNDN);
+	mpfr_t powers;
+	mpfr_init2(powers, 4096);
+	mpfr_ui_pow_ui(powers, 10, l, MPFR_RNDN); 
+	if (canonical) {
+		mpfr_mul(st, st, powers, MPFR_RNDN);
+	}
+	mpfr_t intf;
+	mpfr_init2(intf, 4096);
+	mpfr_t fracf;
+	mpfr_init2(fracf, 4096);
+	mpfr_frac(fracf, st, MPFR_RNDN);
+	mpfr_trunc(intf, st);
+	mpfr_exp_t expt;
+	char* intStr = mpfr_get_str(0, &expt, 10, 0, intf, MPFR_RNDN); 
+	char* tStr = transformSlope(intStr, &expt);
+	std::string tst = tStr;
+	std::rotate(tst.begin(), tst.begin()+index, tst.end()); 
+	mpfr_div_ui(fracf, fracf, 10, MPFR_RNDN);
+	mpfr_add(intf, intf, fracf, MPFR_RNDN);
+	mpfr_set(st, intf, MPFR_RNDN);
+	intStr = mpfr_get_str(0, &expt, 10, 0, st, MPFR_RNDN);
+	tStr = transformSlope(intStr, &expt);
+	return tStr;
 }
 
 //#define logT 7
@@ -117,7 +157,7 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 		char* residue = mpz_get_str(0, 10, tmp);
 		mpz_mod_ui(tmp, tmp, 7);
 		int r2 = mpz_get_ui(tmp);
-//		fprintf(fout, "%s\t%s\n", logval, residue);
+		//		fprintf(fout, "%s\t%s\n", logval, residue);
 		++idx;
 		if (first) {
 			first = false;
@@ -132,28 +172,28 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 		mpz_set(prev_logvalt, logvalt);
 		mpz_set(prev_residuet, residuet);
 	}
-//	fprintf(fout, "\n========================\n");
+	//	fprintf(fout, "\n========================\n");
 	//	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-        char* rotated_slope = rotate(transformed_slope, index);
+	char* rotated_slope = rotate(transformed_slope, index);
 	slopes.push_back(rotated_slope);
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
 	mpfr_clear(logt);
-        mpfr_clear(special);
-        mpfr_clear(tmp2);
-        mpfr_clear(termtf);
-        mpfr_clear(divtf);
-        mpfr_clear(acctf);
-        mpz_clear(logvalt);
-        mpz_clear(residuet);
-        mpz_clear(prev_logvalt);
-        mpz_clear(prev_residuet);
-        mpz_clear(termt);
-        mpz_clear(divt);
+	mpfr_clear(special);
+	mpfr_clear(tmp2);
+	mpfr_clear(termtf);
+	mpfr_clear(divtf);
+	mpfr_clear(acctf);
+	mpz_clear(logvalt);
+	mpz_clear(residuet);
+	mpz_clear(prev_logvalt);
+	mpz_clear(prev_residuet);
+	mpz_clear(termt);
+	mpz_clear(divt);
 	return;
 }
 
@@ -189,7 +229,7 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 }
 
 char* _Factor(char* nn) {
-//	FILE* fout = fopen("out.txt", "w");
+	//	FILE* fout = fopen("out.txt", "w");
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	for (int i = 0; i < 5 ; ++i) {
@@ -200,9 +240,9 @@ char* _Factor(char* nn) {
 	print(slopes);
 #endif
 	char* hmean = calculateHarmonicMean(slopes);
-        cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
-//	fclose(fout);
-        return hmean;
+	cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
+	//	fclose(fout);
+	return hmean;
 }
 
 #if 0
@@ -217,7 +257,7 @@ int main() {
 	}
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
-        char* hmean = factorize(nn);
+	char* hmean = factorize(nn);
 	fclose(fp);
 	free(nn);
 	return 0;
