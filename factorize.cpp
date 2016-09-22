@@ -29,8 +29,33 @@
 using namespace std;
 double  logT[5] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938 };
 
+char* transformSlope(char* s, mpfr_exp_t* expt) {
+	if (strlen(s)==6 && strstr("Inf", s)) {
+		return 0;
+	}
+	char f = s[0];
+	if (f == '-') {
+		++s;
+	}
+	char* tr = new char[strlen(s)+2];
+	int idx = 0;
+	if (f == '-') {
+		tr[idx++] = '-';
+	}
+	int i = idx;
+	for (i = idx; i < *expt+idx; ++i) {
+		tr[i] = s[i-idx];
+	}
+	tr[i++] = '.';
+	for (int j = i-1; j < strlen(s); ++j) {
+		tr[i++]=s[j];
+	}
+	tr[i] = '\0';
+	return tr;
+}
+
 //#define logT 7
-void generate(char* nn, double logT, FILE* fout) {
+void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 	mpfr_t nt;
 	mpfr_init2(nt, 4096) ;
 	mpfr_t logt;
@@ -103,6 +128,10 @@ void generate(char* nn, double logT, FILE* fout) {
 	}
 	fprintf(fout, "\n========================\n");
 	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
+	mpfr_exp_t expt;
+	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
+	char* transformed_slope = transformSlope(acctStr, &expt);
+	slopes.push_back(transformed_slope);
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
@@ -123,8 +152,9 @@ int main() {
 	char* nn = strdup((char*) num.c_str());
 
 	FILE* fout = fopen("out.txt", "w");
+	vector<char*> slopes;
 	for (int i = 0; i < 5 ; ++i) {
-		generate(nn, logT[i], fout);
+		generate(nn, logT[i], fout, slopes);
 	}
 	fclose(fout);
 	fclose(fp);
