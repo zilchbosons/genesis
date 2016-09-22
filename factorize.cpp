@@ -54,8 +54,12 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 	return tr;
 }
 
+char* rotate(char* tSlope, int index) {
+   return tSlope;
+}
+
 //#define logT 7
-void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes) {
+void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int index) {
 	mpfr_t nt;
 	mpfr_init2(nt, 4096) ;
 	mpfr_t logt;
@@ -131,7 +135,8 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes) {
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-	slopes.push_back(transformed_slope);
+        char* rotated_slope = rotate(transformed_slope, index);
+	slopes.push_back(rotated_slope);
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
@@ -175,7 +180,7 @@ char* _Factor(char* nn) {
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	for (int i = 0; i < 5 ; ++i) {
-		generate(nn, logT[i], /*fout,*/ slopes);
+		generate(nn, logT[i], /*fout,*/ slopes, i);
 	}
 #if 0
 	cout <<"\nSlopes Recorded are:\t\n";
