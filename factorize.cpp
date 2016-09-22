@@ -127,7 +127,7 @@ void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 		mpz_set(prev_residuet, residuet);
 	}
 	fprintf(fout, "\n========================\n");
-	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
+	//	mpfr_printf("\nSlope :%.2048RNf\n",acctf);
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
@@ -137,6 +137,17 @@ void generate(char* nn, double logT, FILE* fout, vector<char*>& slopes) {
 	mpfr_clear(nt);
 	mpfr_clear(logt);
 	return;
+}
+
+void print(vector<char*> slopes) {
+	for (int i = 0; i < slopes.size(); ++i) {
+		cout << slopes.at(i)<<"\t,\t";
+	}
+	cout <<"\n";
+}
+
+char* calculateHarmonicMean(vector<char*> slopes) {
+
 }
 
 int main() {
@@ -156,6 +167,9 @@ int main() {
 	for (int i = 0; i < 5 ; ++i) {
 		generate(nn, logT[i], fout, slopes);
 	}
+	cout <<"\nSlopes Recorded are:\t\n";
+	print(slopes);
+        char* hmean = calculateHarmonicMean(slopes);
 	fclose(fout);
 	fclose(fp);
 	free(nn);
