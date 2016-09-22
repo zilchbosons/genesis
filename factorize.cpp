@@ -55,6 +55,8 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 }
 
 char* rotate(char* tSlope, int index) {
+   mpfr_t st;
+   mpfr_init(st);
    return tSlope;
 }
 
@@ -141,6 +143,17 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 	mpfr_clear(term);
 	mpfr_clear(nt);
 	mpfr_clear(logt);
+        mpfr_clear(special);
+        mpfr_clear(tmp2);
+        mpfr_clear(termtf);
+        mpfr_clear(divtf);
+        mpfr_clear(acctf);
+        mpz_clear(logvalt);
+        mpz_clear(residuet);
+        mpz_clear(prev_logvalt);
+        mpz_clear(prev_residuet);
+        mpz_clear(termt);
+        mpz_clear(divt);
 	return;
 }
 
