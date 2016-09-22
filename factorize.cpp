@@ -26,6 +26,8 @@
 #include <vector>
 #include "common.hpp"
 
+#define PREC 4096
+
 using namespace std;
 double  logT[5] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938 };
 
@@ -57,70 +59,61 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 char* rotate(char* tSlope, int index, int l) {
 	char f1 = tSlope[0];
 	char* ts = 0;
-	bool canonical = false;
-	if (f1 == '0') {
-		ts = new char[l+5];
-		strncpy(ts, tSlope, l+4); 
-		ts[l+4] = '\0';
+	char* ts_frac = new char[3];
+	ts_frac[0] = '.';
+	cout <<"\nTslope:\t"<<tSlope<<"\n";
+	char* result = 0;
+	if (f1 == '.') {
+		ts = new char[l+2];
+		strncpy(ts, tSlope+1, l+1); 
+		ts[l+1] = '\0';
+		std::string tst = ts;
+		std::rotate(tst.begin(), tst.begin()+index, tst.end()); 
+		ts = strdup((char*)tst.c_str());
+		char* ts2 = new char[l+1];
+		strncpy(ts2, ts, l);
+		ts2[l] = '\0';
+		ts_frac[1] =ts[l];
+		ts_frac[2] ='\0';
+		cout <<"\nInteger Part: \t"<<ts2<<"\n";
+		cout <<"\nFractional Part: \t"<<ts_frac<<"\n";
+		tst = strdup(ts2);
+		tst += ts_frac;
+		result = strdup((char*) tst.c_str());
 	} else {
-		canonical = true;
-		ts = new char[l+3];
-		strncpy(ts, tSlope, l+2); 
-		ts[l+2] = '\0';
+		ts_frac[1] = tSlope[0];
+		ts_frac[2] = '\0';
+		ts = new char[l+1];
+		strncpy(ts, tSlope+2, l); 
+		ts[l] = '\0';
 		char* ts2 = common::reverse_string(ts);
-		delete [] ts;
-		ts = ts2;
+		//delete [] ts;
+		std::string tst = strdup(ts2);
+		std::rotate(tst.begin(), tst.begin()+(index % l), tst.end()); 
+		tst += ts_frac;
+		result = strdup((char*) tst.c_str());
 	}
-	mpfr_t st;
-	mpfr_init2(st, 4096);
-	mpfr_set_str(st, ts, 10, MPFR_RNDN);
-	mpfr_t powers;
-	mpfr_init2(powers, 4096);
-	mpfr_ui_pow_ui(powers, 10, l, MPFR_RNDN); 
-	if (canonical) {
-		mpfr_mul(st, st, powers, MPFR_RNDN);
-	}
-	mpfr_t intf;
-	mpfr_init2(intf, 4096);
-	mpfr_t fracf;
-	mpfr_init2(fracf, 4096);
-	mpfr_frac(fracf, st, MPFR_RNDN);
-	mpfr_trunc(intf, st);
-	mpfr_exp_t expt;
-	char* intStr = mpfr_get_str(0, &expt, 10, 0, intf, MPFR_RNDN); 
-	char* tStr = transformSlope(intStr, &expt);
-	std::string tst = tStr;
-	std::rotate(tst.begin(), tst.begin()+index, tst.end()); 
-	mpfr_div_ui(fracf, fracf, 10, MPFR_RNDN);
-	mpfr_add(intf, intf, fracf, MPFR_RNDN);
-	mpfr_set(st, intf, MPFR_RNDN);
-	intStr = mpfr_get_str(0, &expt, 10, 0, st, MPFR_RNDN);
-	tStr = transformSlope(intStr, &expt);
-	mpfr_clear(st);
-	mpfr_clear(powers);
-	mpfr_clear(intf);
-	mpfr_clear(fracf);
-	return tStr;
+	return result;
 }
 
 //#define logT 7
 void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int index) {
 	mpfr_t nt;
-	mpfr_init2(nt, 4096) ;
+	mpfr_init2(nt, PREC) ;
 	mpfr_t logt;
-	mpfr_init2(logt, 4096);
+	mpfr_init2(logt, PREC);
 	mpz_t tmp;
 	mpz_init(tmp);
 	mpfr_t term;
-	mpfr_init2(term, 4096);
+	mpfr_init2(term, PREC);
 	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
 	unsigned long long int idx = 0;
-        int l = strlen(nn);
+	int l = strlen(nn);
 	mpfr_t special;
-	mpfr_init2(special, 4096);
+	mpfr_init2(special, PREC);
 	mpfr_set_d(special, logT, MPFR_RNDN);
 	mpfr_t tmp2;
-	mpfr_init2(tmp2, 4096);
+	mpfr_init2(tmp2, PREC);
 	mpfr_set(tmp2, special, MPFR_RNDN);
 	mpfr_log(special, special, MPFR_RNDN);
 	//fprintf(fout, "\n%f\n", logT);
@@ -139,11 +132,11 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 	mpz_t divt;
 	mpz_init(divt);
 	mpfr_t termtf;
-	mpfr_init2(termtf, 4096);
+	mpfr_init2(termtf, PREC);
 	mpfr_t divtf;
-	mpfr_init2(divtf, 4096);
+	mpfr_init2(divtf, PREC);
 	mpfr_t acctf;
-	mpfr_init2(acctf, 4096);
+	mpfr_init2(acctf, PREC);
 	mpfr_set_si(acctf, 0, MPFR_RNDN);
 	while (mpfr_cmp_si(nt, 1)  >= 0)  {
 		mpfr_log(logt, nt, MPFR_RNDN);
@@ -213,9 +206,9 @@ void print(vector<char*> slopes) {
 char* calculateHarmonicMean(vector<char*> slopes) {
 	int sz = slopes.size();
 	mpfr_t acc;
-	mpfr_init2(acc, 4096);
+	mpfr_init2(acc, PREC);
 	mpfr_t term;
-	mpfr_init2(term, 4096);
+	mpfr_init2(term, PREC);
 	mpfr_set_si(acc, 0, MPFR_RNDN);
 	mpfr_t one;
 	mpfr_init(one);
