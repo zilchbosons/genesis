@@ -187,9 +187,12 @@ int main() {
 	for (int i = 0; i < 5 ; ++i) {
 		generate(nn, logT[i], fout, slopes);
 	}
+#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
 	print(slopes);
+#endif
 	char* hmean = calculateHarmonicMean(slopes);
+        cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
 	fclose(fout);
 	fclose(fp);
 	free(nn);
