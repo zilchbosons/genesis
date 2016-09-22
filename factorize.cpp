@@ -97,6 +97,10 @@ char* rotate(char* tSlope, int index) {
 	mpfr_set(st, intf, MPFR_RNDN);
 	intStr = mpfr_get_str(0, &expt, 10, 0, st, MPFR_RNDN);
 	tStr = transformSlope(intStr, &expt);
+	mpfr_clear(st);
+	mpfr_clear(powers);
+	mpfr_clear(intf);
+	mpfr_clear(fracf);
 	return tStr;
 }
 
