@@ -228,6 +228,8 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 	}
 	mpfr_set_ui(one, sz, MPFR_RNDN);
 	mpfr_div(term, one, acc, MPFR_RNDN);
+	mpfr_printf("\nHarmonic Mean calculated is :%.2RNf\n",term);
+	mpfr_sqrt(term, term, MPFR_RNDN);
 	mpfr_exp_t expt;
 	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
 	char* tone = transformSlope(ts, &expt);
@@ -247,7 +249,7 @@ char* _Factor(char* nn) {
 	print(slopes);
 #endif
 	char* hmean = calculateHarmonicMean(slopes);
-	cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
+	cout <<"\nRoot:\t"<<hmean<<"\n";
 	//	fclose(fout);
 	return hmean;
 }
