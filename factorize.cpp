@@ -170,18 +170,7 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 
 }
 
-int main() {
-	/* Step 1: Reading the Number to be factorized */
-	FILE* fp = fopen("./input.txt", "r");
-	std::string num = "";
-	char n[1024];
-	int ret = 0;
-	while ((ret=fscanf(fp, "%s", n))!= EOF) {
-		num += n;
-	}
-	cout << "\nNumber read was : \t" << num <<"\n";
-	char* nn = strdup((char*) num.c_str());
-
+char* factorize(char* nn) {
 	FILE* fout = fopen("out.txt", "w");
 	vector<char*> slopes;
 	for (int i = 0; i < 5 ; ++i) {
@@ -194,6 +183,22 @@ int main() {
 	char* hmean = calculateHarmonicMean(slopes);
         cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
 	fclose(fout);
+        return hmean;
+}
+
+int main() {
+	/* Step 1: Reading the Number to be factorized */
+	FILE* fp = fopen("./input.txt", "r");
+	std::string num = "";
+	char n[1024];
+	int ret = 0;
+	while ((ret=fscanf(fp, "%s", n))!= EOF) {
+		num += n;
+	}
+	cout << "\nNumber read was : \t" << num <<"\n";
+	char* nn = strdup((char*) num.c_str());
+        char* hmean = factorize(nn);
+        cout <<"\nHarmonic Mean calculated is :\t"<<hmean<<"\n";
 	fclose(fp);
 	free(nn);
 	return 0;
