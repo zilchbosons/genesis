@@ -147,6 +147,26 @@ void print(vector<char*> slopes) {
 }
 
 char* calculateHarmonicMean(vector<char*> slopes) {
+	int sz = slopes.size();
+	mpfr_t acc;
+	mpfr_init2(acc, 4096);
+	mpfr_t term;
+	mpfr_init2(term, 4096);
+	mpfr_set_si(acc, 0, MPFR_RNDN);
+	mpfr_t one;
+	mpfr_init(one);
+	mpfr_set_ui(one, 1, MPFR_RNDN);
+	for (int i = 0; i < sz;++i) {
+		mpfr_set_str(term, slopes.at(i), 10, MPFR_RNDN);
+		mpfr_div(term, one, term,MPFR_RNDN);
+		mpfr_add(acc, acc, term, MPFR_RNDN);
+	}
+	mpfr_set_ui(one, sz, MPFR_RNDN);
+	mpfr_div(term, one, acc, MPFR_RNDN);
+	mpfr_exp_t expt;
+	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
+	char* tone = transformSlope(ts, &expt);
+	return tone;
 
 }
 
@@ -169,7 +189,7 @@ int main() {
 	}
 	cout <<"\nSlopes Recorded are:\t\n";
 	print(slopes);
-        char* hmean = calculateHarmonicMean(slopes);
+	char* hmean = calculateHarmonicMean(slopes);
 	fclose(fout);
 	fclose(fp);
 	free(nn);
