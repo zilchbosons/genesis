@@ -54,9 +54,8 @@ char* transformSlope(char* s, mpfr_exp_t* expt) {
 	return tr;
 }
 
-char* rotate(char* tSlope, int index) {
+char* rotate(char* tSlope, int index, int l) {
 	char f1 = tSlope[0];
-	int l = strlen(tSlope);
 	char* ts = 0;
 	bool canonical = false;
 	if (f1 == '0') {
@@ -116,6 +115,7 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 	mpfr_init2(term, 4096);
 	mpfr_set_str(nt, nn, 10, MPFR_RNDN);
 	unsigned long long int idx = 0;
+        int l = strlen(nn);
 	mpfr_t special;
 	mpfr_init2(special, 4096);
 	mpfr_set_d(special, logT, MPFR_RNDN);
@@ -181,7 +181,9 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, int 
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-	char* rotated_slope = rotate(transformed_slope, index);
+	cout << "\nTransformed Slope: \t"<<transformed_slope<<"\tindex:\t"<<index<<"\n";
+	char* rotated_slope = rotate(transformed_slope, index, l);
+	cout << "\nRotated Slope: \t"<<rotated_slope<<"\n";
 	slopes.push_back(rotated_slope);
 	mpz_clear(tmp);
 	mpfr_clear(term);
@@ -249,7 +251,7 @@ char* _Factor(char* nn) {
 	return hmean;
 }
 
-#if 0
+//#if 0
 int main() {
 	/* Step 1: Reading the Number to be factorized */
 	FILE* fp = fopen("./input.txt", "r");
@@ -261,9 +263,9 @@ int main() {
 	}
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
-	char* hmean = factorize(nn);
+	char* hmean = _Factor(nn);
 	fclose(fp);
 	free(nn);
 	return 0;
 }
-#endif
+//#endif
