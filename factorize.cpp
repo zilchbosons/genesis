@@ -274,12 +274,22 @@ char* _Factor(char* nn) {
 	mpfr_set_ui(cf, GODS_CONSTANT, MPFR_RNDN);
 	mpfr_log(cf, cf, MPFR_RNDN);
 	mpfr_div(rf, rf, cf, MPFR_RNDN);
+	mpfr_trunc(rf, rf);
+int g = 0;
+if (mpfr_cmp_si(rf, 0)==0) {
+g = 0;
+} else {
 	mpfr_ui_pow(rf, GODS_CONSTANT, rf, MPFR_RNDN);
 	mpfr_div(rf, nf, rf, MPFR_RNDN);
 	mpfr_get_z(rt, rf, MPFR_RNDN);
-	int g = mpz_get_ui(rt);
-	for (int i = 0; i < g*SZ + k*LS; ++i) {
-		double logbase = (pi[i]-'0') + logT[i % SZ];
+	g = mpz_get_ui(rt);
+}
+	cout <<"\ng=\t"<<g<<"\tk=\t"<<k<<"\n";
+	for (int i = 0; i < g*SZ + k; ++i) {
+		int pk = pi[i] - '0';
+		int ek = e[i]  -'0';
+		int base = 7-((pk+ek) % 7);
+		double logbase = base + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 	//#if 0
