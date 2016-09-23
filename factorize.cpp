@@ -318,39 +318,10 @@ vector<char*> hmeans;
 		}
 		slopes.clear();
 	}
-        char* ahmean = calculateArithmeticMean(hmeans);
-	for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
-		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
-		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
-		int base = ( pk+ ek ) % SZ;
-		//		int base = ( pk ) % sz;
-		if ( base <= 0) break;
-		double logbase = base + logT[i % SZ];
-		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
-	}
-	//#if 0
-	cout <<"\nslopes recorded are:\t\n";
-	print(slopes);
-	//	#endif
-	char* hmean1 = calculateHarmonicMean(slopes);
-	slopes.clear();
-	for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
-		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
-		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
-		//	int base = ( pk+ ek ) % sz;
-		int base = ( pk ) % SZ;
-		if ( base <= 0) break;
-		double logbase = base + logT[i % SZ];
-		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
-	}
-	//#if 0
-	cout <<"\nslopes recorded are:\t\n";
-	print(slopes);
-	//	#endif
-	char* hmean2 = calculateHarmonicMean(slopes);
+	char* ahmean = calculateArithmeticMean(hmeans);
+//	slopes.clear();
 	//	fclose(fout);
         cout <<"\nAHMean:\t"<<ahmean<<"\n";
-        cout <<"\nhmean1:\t"<<hmean1<<"\thmean2:\t"<<hmean2<<"\n";
 	return ahmean;
 }
 
