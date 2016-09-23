@@ -34,9 +34,10 @@
 
 using namespace std;
 #define SZ 5
-#define LS 5
+#define LS 4
 //int golden_sequence[LS] = { 3, 1, 4, 1, 5 };
 //int golden_sequence[LS] = { 2, 3, 1, 2, 1 };
+int sequence[LS] = { 1, 3, 1, 2 };
 double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
@@ -257,49 +258,17 @@ char* _Factor(char* nn) {
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	int l = strlen(nn);
-	mpz_t nt;
-	mpz_init(nt);
-	mpz_set_str(nt, nn, 10);
-	mpz_t rt;
-	mpz_init(rt);
-	mpz_mod_ui(rt, nt, GODS_CONSTANT);
-	int k = mpz_get_ui(rt);
-	mpfr_t nf;
-	mpfr_init(nf);
-	mpfr_set_str(nf, nn, 10, MPFR_RNDN);
-	mpfr_t rf;
-	mpfr_init(rf);
-	mpfr_log(rf, nf, MPFR_RNDN);
-	mpfr_t cf;
-	mpfr_init(cf);
-	mpfr_set_ui(cf, GODS_CONSTANT, MPFR_RNDN);
-	mpfr_log(cf, cf, MPFR_RNDN);
-	mpfr_div(rf, rf, cf, MPFR_RNDN);
-	mpfr_trunc(rf, rf);
-	int g = 0;
-	mpfr_t _rf;
-	mpfr_init(_rf);
-	if (mpfr_cmp_si(rf, 0)==0) {
-		g = 0;
-	} else {
-		mpfr_ui_pow(_rf, GODS_CONSTANT, rf, MPFR_RNDN);
-		mpfr_div(cf, nf, _rf, MPFR_RNDN);
-		mpfr_mul(rf, rf, cf, MPFR_RNDN);
-		mpfr_get_z(rt, rf, MPFR_RNDN);
-		g = mpz_get_ui(rt);
-	}
+	int g = l / 5;
+	int k = l % 5;
 	cout <<"\ng=\t"<<g<<"\tk=\t"<<k<<"\n";
-	for (int i = 0; i < (g+k)*3000; ++i) {
-		int pk = pi[i] - '0';
-		int ek = e[i]  -'0';
-		int base = 0;
-		if (pk > 0) {
-			base = pk;
-		} else  if (pk == 0) {
-			base = ek;
-		} else {
-			break;
-		}
+	int _g = g;
+	int _k = k;
+        int ek =2, pk =3;
+	for (int i = 0; i < _g*ek+_k*pk+l*sequence[i % LS]; ++i ) {
+		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
+		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
+		int base = ((ek*1312 + pk*1213) % SZ)  ;
+		if ( base == 0) break;
 		double logbase = base + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
