@@ -264,11 +264,21 @@ char* _Factor(char* nn) {
 	int _g = g;
 	int _k = k;
         int ek =2, pk =3;
+#if 0
 	for (int i = 0; i < _g*ek+_k*pk+l*sequence[i % LS]; ++i ) {
 		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
 		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
 		int base = ((ek*1312 + pk*1213) % SZ)  ;
-		if ( base == 0) break;
+		if ( base <= 0) break;
+		double logbase = base + logT[i % SZ];
+		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
+	}
+#endif
+	for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
+		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
+		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
+		int base = (((unsigned long long int)((logT[i % SZ])*100000) + pk*312 + ek*231) % SZ)  ;
+		if ( base <= 0) break;
 		double logbase = base + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
