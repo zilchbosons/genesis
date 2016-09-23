@@ -283,9 +283,9 @@ char* _Factor(char* nn) {
 		for (int i = 0; i < l; ++i ) {
 			pk = pi[(i)*3+(j)*5] - '0';
 			ek = e[(i)*3+(j)*5]  -'0';
-                        int nk1 = nn[pk % l] - '0';
-                        int nk2 = nn[(9-ek) % l] - '0';
-			base = (nk1/nk2) + (nk2/nk1);
+                        int nk1 = nn[pk % l ] - '0';
+                        int nk2 = nn[(9-ek) % l ] - '0';
+			base = (nk1/nk2) + (nk2/nk1); 
 			double logbase = (base + logT[i % SZ]);
 			generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 		}
