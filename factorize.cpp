@@ -29,7 +29,8 @@
 #include "e.hpp"
 
 #define PREC 4096
-#define GODS_CONSTANT 69384
+#define GODS_CONSTANT 7 //69384
+
 
 using namespace std;
 #define SZ 5
@@ -275,20 +276,30 @@ char* _Factor(char* nn) {
 	mpfr_log(cf, cf, MPFR_RNDN);
 	mpfr_div(rf, rf, cf, MPFR_RNDN);
 	mpfr_trunc(rf, rf);
-int g = 0;
-if (mpfr_cmp_si(rf, 0)==0) {
-g = 0;
-} else {
-	mpfr_ui_pow(rf, GODS_CONSTANT, rf, MPFR_RNDN);
-	mpfr_div(rf, nf, rf, MPFR_RNDN);
-	mpfr_get_z(rt, rf, MPFR_RNDN);
-	g = mpz_get_ui(rt);
-}
+	int g = 0;
+	mpfr_t _rf;
+	mpfr_init(_rf);
+	if (mpfr_cmp_si(rf, 0)==0) {
+		g = 0;
+	} else {
+		mpfr_ui_pow(_rf, GODS_CONSTANT, rf, MPFR_RNDN);
+		mpfr_div(cf, nf, _rf, MPFR_RNDN);
+		mpfr_mul(rf, rf, cf, MPFR_RNDN);
+		mpfr_get_z(rt, rf, MPFR_RNDN);
+		g = mpz_get_ui(rt);
+	}
 	cout <<"\ng=\t"<<g<<"\tk=\t"<<k<<"\n";
-	for (int i = 0; i < g*SZ + k; ++i) {
+	for (int i = 0; i < (g+k)*3000; ++i) {
 		int pk = pi[i] - '0';
 		int ek = e[i]  -'0';
-		int base = 7-((pk+ek) % 7);
+		int base = 0;
+		if (pk > 0) {
+			base = pk;
+		} else  if (pk == 0) {
+			base = ek;
+		} else {
+			break;
+		}
 		double logbase = base + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
