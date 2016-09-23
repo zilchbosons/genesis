@@ -25,14 +25,17 @@
 #include <mpfr.h>
 #include <vector>
 #include "common.hpp"
+#include "pi.hpp"
+#include "e.hpp"
 
 #define PREC 4096
 #define GODS_CONSTANT 69384
 
 using namespace std;
 #define SZ 5
-#define LS 3
-int golden_sequence[LS] = { 2, 3, 1 };
+#define LS 5
+//int golden_sequence[LS] = { 3, 1, 4, 1, 5 };
+//int golden_sequence[LS] = { 2, 3, 1, 2, 1 };
 double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
@@ -276,7 +279,7 @@ char* _Factor(char* nn) {
 	mpfr_get_z(rt, rf, MPFR_RNDN);
 	int g = mpz_get_ui(rt);
 	for (int i = 0; i < g*SZ + k*LS; ++i) {
-		double logbase = golden_sequence[i % LS] + logT[i % SZ];
+		double logbase = (pi[i]-'0') + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 	//#if 0
