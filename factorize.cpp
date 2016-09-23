@@ -297,7 +297,7 @@ char* _Factor(char* nn) {
 			pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
 			ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
 			//		int base = (((unsigned long long int)((logT[i % SZ])*100000) + pk*312 + ek*231) % SZ)  ;
-			int base = ((((unsigned long long int)((logT[j])*100000)+ek*pk)+(baseT[j]+ek+pk)) % SZ)  ;
+			int base = ((((unsigned long long int)((logT[j])*100000)+baseT[j]*ek*pk)+(baseT[j]+ek+pk)) % SZ)  ;
 			//		int base = ( pk+ ek ) % SZ;
 			//		int base = ( pk ) % SZ;
 			if ( base <= 0) break;
