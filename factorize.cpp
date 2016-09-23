@@ -50,7 +50,7 @@ int contains(int nk, int& c) {
 		while ( acc < nk) {
 			int  pk2 = sequence[c1];
 			acc += pk2;
-			seq = seq*10 + pk2;
+			seq = (seq+ pk2) % 7;
 			c1 = (c1 + 1) % 4;
 		}
 		if (acc == nk)  {
@@ -147,10 +147,11 @@ int main() {
 	while ((ret=fscanf(fp, "%s", n))!= EOF) {
 		num += n;
 	}
+	char* nn = strdup((char*) num.c_str());
 std::string _num = num;
-_num += num;
-	cout << "\nNumber read was : \t" << _num <<"\n";
-	char* nn = strdup((char*) _num.c_str());
+_num += common::reverse_string(nn);
+	nn = strdup((char*) _num.c_str());
+cout <<"\nNumber read was:\t"<<nn<<"\n";
 	int l = strlen(nn);
 	vector<int> passage;
 	char* root = _Factor(nn, passage);
