@@ -29,9 +29,7 @@
 #define PREC 4096
 
 using namespace std;
-#define SZ 5
-//double  logT[SZ] = {7.69384, 1.93846, 3.38469, 1.84693, 2.46938};
-double  logT[SZ] = {1.69384, 2.93846, 1.38469, 1.84693, 2.46938};
+double  logT[5] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938 };
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
 	if (strlen(s)==6 && strstr("Inf", s)) {
@@ -180,13 +178,13 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, vect
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	cout << "\nTransformed Slope: \t"<<transformed_slope<<"\tindex:\t"<<index<<"\n";
-//#endif
-	char* rotated_slope = rotate(transformed_slope, index % 5, l);
-//#ifdef _DEBUG
+#endif
+	char* rotated_slope = rotate(transformed_slope, index, l);
+#ifdef _DEBUG
 	cout << "\nRotated Slope: \t"<<rotated_slope<<"\n";
-//#endif
+#endif
 	slopes.push_back(rotated_slope);
         _slopes.push_back(common::reverse_string(rotated_slope));
 	mpz_clear(tmp);
@@ -233,7 +231,7 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 	mpfr_set_ui(one, sz, MPFR_RNDN);
 	mpfr_div(term, one, acc, MPFR_RNDN);
 	mpfr_printf("\nHarmonic Mean calculated is :%.2RNf\n",term);
-//	mpfr_sqrt(term, term, MPFR_RNDN);
+	mpfr_sqrt(term, term, MPFR_RNDN);
 	mpfr_exp_t expt;
 	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
 	char* tone = transformSlope(ts, &expt);
@@ -246,15 +244,15 @@ char* _Factor(char* nn) {
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	vector<char*> _slopes;
-	for (int i = 0; i < SZ ; ++i) {
+	for (int i = 0; i < 5 ; ++i) {
 		generate(nn, logT[i], /*fout,*/ slopes, _slopes,  i);
 	}
-//#if 0
+#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
 	print(slopes);
-//#endif
+#endif
 	char* hmean = calculateHarmonicMean(slopes);
-	//cout <<"\nRoot:\t"<<hmean<<"\n";
+	cout <<"\nRoot:\t"<<hmean<<"\n";
 	//	fclose(fout);
 	return hmean;
 }
