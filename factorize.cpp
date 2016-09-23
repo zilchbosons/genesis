@@ -145,7 +145,7 @@ bool isPrime(vector<int> passage) {
 	return false;
 }
 
-//#if 0
+#if 0
 int main() {
 	/* Step 1: Reading the Number to be factorized */
 	FILE* fp = fopen("./input.txt", "r");
@@ -169,4 +169,4 @@ int main() {
 	free(nn);
 	return 0;
 }
-//#endif
+#endif

@@ -94,6 +94,10 @@ except AttributeError:
 def _Factor(nn):
     return _factorize._Factor(nn)
 _Factor = _factorize._Factor
+
+def isPrime(nn):
+    return _factorize.isPrime(nn)
+isPrime = _factorize.isPrime
 # This file is compatible with both classic and new-style classes.
 
 
