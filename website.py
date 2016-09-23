@@ -9,6 +9,15 @@ app = Flask(__name__)
 #def _Factor(args):
 #   return str(args)
 
+@app.route('/prime', methods= ['GET', 'POST'])
+def factorize():
+        if (request.method == 'POST'):
+            return _Factor(str(request.form.get('num')))
+        elif (request.method == 'GET'):
+            return _Factor(str(request.args.get('num')))
+        else:
+            return None
+
 @app.route('/factorize', methods= ['GET', 'POST'])
 def factorize():
         if (request.method == 'POST'):
