@@ -74,7 +74,7 @@ char* _Factor(char* nn, vector<int>& passage)  {
 			passage.push_back(pass);
 		} else {
 			long long acc = nk;
-int preidx = idx;
+			int preidx = idx;
 			while (idx < l && !(pass= contains(acc, c))) {
 				++idx;
 				if ( idx >=l) break;
@@ -85,9 +85,9 @@ int preidx = idx;
 				acc += (nk);
 			}
 			if (idx >=l) {
-for (int g = preidx; g< l;++g) {
-				passage.push_back(nn[g]-'0');
-}
+				for (int g = preidx; g< l;++g) {
+					passage.push_back(nn[g]-'0');
+				}
 				print(passage);
 				return "";
 			} else {
@@ -100,41 +100,49 @@ for (int g = preidx; g< l;++g) {
 	return "";
 }
 
-bool isPrime(char* nn, vector<int> passage) {
-	int l = strlen(nn);
-	int c = 0;
-	int rem = -1;
-bool oos = false;
-	for (int i = 0; i < passage.size(); ++i) {
-		int pk = passage.at(i);
-pk  = common::reverse_number(pk);
-		while (pk > 0 ) {
-			int rk = pk % 10;
-			if (rk == sequence[c]) {
-				c = (c +1) % 4;
-				rem  = 0;
-			} else {
-				rem = rk;
-oos = true;
-				break;
-			}
-			pk = pk / 10;
-		}
-		if (oos) break;
-	}
-	if (!oos) {
-		rem = 0;
-		for (int j = c; j < 4; ++j) {
-			rem += sequence[c];
-c = (c+1)% 4;
-		}
-	}
-		if (rem % 2 == 1) {
-			return true;
-		} else if (rem % 2 == 0) {
+bool palindrome(vector<int> passage) {
+	int lb = 0;
+	int ub = passage.size()-1;
+	int i = lb, j= ub;
+	for (; i < j; ++i, --j) {
+		if (passage.at(i) == passage.at(j)) {
+			continue;
+		} else {
 			return false;
 		}
-return false;
+	}
+	return true;
+}
+
+bool divisible(vector<int> passage) {
+	mpz_t pt;
+	mpz_init(pt);
+	mpz_set_si(pt, 0);
+	for (int i = 0; i< passage.size(); ++i) {
+		mpz_mul_ui(pt, pt, 10);
+		mpz_add_ui(pt, pt, passage.at(i));
+	}
+	mpz_mod_ui(pt, pt, 7);
+	if (mpz_cmp_si(pt, 0)==0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool isPrime(vector<int> passage) {
+	bool isPalindrome = palindrome(passage);
+	bool isDiv7 = divisible(passage);
+	if (!isPalindrome && !isDiv7) {
+		return true;
+	}else if (isPalindrome && isDiv7) {
+		return true;
+	}else if (!isPalindrome && isDiv7) {
+		return false;
+	} else if (isPalindrome && !isDiv7) {
+		return false;
+	}
+	return false;
 }
 
 //#if 0
@@ -148,14 +156,14 @@ int main() {
 		num += n;
 	}
 	char* nn = strdup((char*) num.c_str());
-std::string _num = num;
-_num += common::reverse_string(nn);
+	cout <<"\nNumber read was:\t"<<nn<<"\n";
+	std::string _num = num;
+	_num += common::reverse_string(nn);
 	nn = strdup((char*) _num.c_str());
-cout <<"\nNumber read was:\t"<<nn<<"\n";
 	int l = strlen(nn);
 	vector<int> passage;
 	char* root = _Factor(nn, passage);
-	bool is_prime = isPrime(nn, passage);
+	bool is_prime = isPrime(passage);
 	cout <<"\nis_prime:\t"<<is_prime<<"\n";
 	fclose(fp);
 	free(nn);
