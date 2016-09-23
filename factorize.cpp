@@ -253,6 +253,22 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 
 }
 
+char* calculateArithmeticMean(vector<char*> hmeans) {
+int sz = hmeans.size();
+mpz_t term;
+mpz_init(term);
+mpz_t acc;
+mpz_init(acc);
+mpz_set_si(acc, 0);
+for (int i =0; i < sz; ++i) {
+mpz_set_str(term, hmeans.at(i), 10);
+mpz_add(acc, acc, term);
+}
+mpz_div_ui(acc, acc, sz);
+return strdup((char*) mpz_get_str(0, 10, acc));
+
+}
+
 char* _Factor(char* nn) {
 	//	FILE* fout = fopen("out.txt", "w");
 	cout << "\nNumber read was : \t" << nn <<"\n";
@@ -263,7 +279,7 @@ char* _Factor(char* nn) {
 	cout <<"\ng=\t"<<g<<"\tk=\t"<<k<<"\n";
 	int _g = g;
 	int _k = k;
-        int ek =2, pk =3;
+	int ek =2, pk =3;
 #if 0
 	for (int i = 0; i < _g*ek+_k*pk+l*sequence[i % LS]; ++i ) {
 		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
@@ -274,22 +290,68 @@ char* _Factor(char* nn) {
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 #endif
+vector<char*> hmeans;
+	for (int j = 0; j < 5; ++j) {
+		for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
+			pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
+			ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
+			//		int base = (((unsigned long long int)((logT[i % SZ])*100000) + pk*312 + ek*231) % SZ)  ;
+			int base = (((unsigned long long int)((logT[j])*100000)) % SZ)  ;
+			//		int base = ( pk+ ek ) % SZ;
+			//		int base = ( pk ) % SZ;
+			if ( base <= 0) break;
+			double logbase = base + logT[i % SZ];
+			generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
+		}
+		//#if 0
+		cout <<"\nSlopes Recorded are:\t\n";
+		print(slopes);
+		//	#endif
+		char* hmean = calculateHarmonicMean(slopes);
+		if (strlen(hmean)==0) {
+			char zero[2] ;
+			zero[0]= '0';
+			zero[1] = '\0';
+			hmeans.push_back(strdup(zero));
+		} else {
+			hmeans.push_back(hmean);
+		}
+		slopes.clear();
+	}
+        char* ahmean = calculateArithmeticMean(hmeans);
 	for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
 		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
 		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
-		int base = (((unsigned long long int)((logT[i % SZ])*100000) + pk*312 + ek*231) % SZ)  ;
+		int base = ( pk+ ek ) % SZ;
+		//		int base = ( pk ) % sz;
 		if ( base <= 0) break;
 		double logbase = base + logT[i % SZ];
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 	//#if 0
-	cout <<"\nSlopes Recorded are:\t\n";
+	cout <<"\nslopes recorded are:\t\n";
 	print(slopes);
 	//	#endif
-	char* hmean = calculateHarmonicMean(slopes);
-	cout <<"\nRoot:\t"<<hmean<<"\n";
+	char* hmean1 = calculateHarmonicMean(slopes);
+	slopes.clear();
+	for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
+		pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
+		ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
+		//	int base = ( pk+ ek ) % sz;
+		int base = ( pk ) % SZ;
+		if ( base <= 0) break;
+		double logbase = base + logT[i % SZ];
+		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
+	}
+	//#if 0
+	cout <<"\nslopes recorded are:\t\n";
+	print(slopes);
+	//	#endif
+	char* hmean2 = calculateHarmonicMean(slopes);
 	//	fclose(fout);
-	return hmean;
+        cout <<"\nAHMean:\t"<<ahmean<<"\n";
+        cout <<"\nhmean1:\t"<<hmean1<<"\thmean2:\t"<<hmean2<<"\n";
+	return ahmean;
 }
 
 //#if 0
