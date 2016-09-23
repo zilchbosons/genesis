@@ -233,9 +233,15 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 	mpfr_div(term, one, acc, MPFR_RNDN);
 	mpfr_printf("\nHarmonic Mean calculated is :%.2RNf\n",term);
 	mpfr_sqrt(term, term, MPFR_RNDN);
-	mpfr_exp_t expt;
+	mpz_t termt;
+	mpz_init(termt);
+	mpfr_get_z(termt, term, MPFR_RNDN);
+#if 0
+        mpfr_exp_t expt;
 	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
 	char* tone = transformSlope(ts, &expt);
+#endif
+        char* tone = strdup(mpz_get_str(0, 10, termt));
 	return tone;
 
 }
