@@ -30,7 +30,9 @@
 
 using namespace std;
 #define SZ 5
-double  logT[SZ] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938};
+#define LS 3
+#define OPTLEN 7
+double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
 	if (strlen(s)==6 && strstr("Inf", s)) {
@@ -102,7 +104,7 @@ char* rotate(char* tSlope, int index, int l) {
 }
 
 //#define logT 7
-void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, vector<char*>& _slopes, int index) {
+void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes,  int index) {
 	mpfr_t nt;
 	mpfr_init2(nt, PREC) ;
 	mpfr_t logt;
@@ -179,15 +181,14 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, vect
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	cout << "\nTransformed Slope: \t"<<transformed_slope<<"\tindex:\t"<<index<<"\n";
-	#endif
+#endif
 	char* rotated_slope = rotate(transformed_slope, index % 5, l);
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	cout << "\nRotated Slope: \t"<<rotated_slope<<"\n";
-	#endif
+#endif
 	slopes.push_back(rotated_slope);
-	_slopes.push_back(common::reverse_string(rotated_slope));
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
@@ -237,11 +238,11 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 	mpz_init(termt);
 	mpfr_get_z(termt, term, MPFR_RNDN);
 #if 0
-        mpfr_exp_t expt;
+	mpfr_exp_t expt;
 	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
 	char* tone = transformSlope(ts, &expt);
 #endif
-        char* tone = strdup(mpz_get_str(0, 10, termt));
+	char* tone = strdup(mpz_get_str(0, 10, termt));
 	return tone;
 
 }
@@ -250,19 +251,51 @@ char* _Factor(char* nn) {
 	//	FILE* fout = fopen("out.txt", "w");
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
-	vector<char*> _slopes;
 	int l = strlen(nn);
-	int k = l / 5;
-	int g = l % 5;
-	int iter = k+g;
-	for (int i = 0; i <iter*SZ ; ++i) {
-		int index = i % SZ;
-		generate(nn, logT[index], /*fout,*/ slopes, _slopes,  index);
+	mpz_t nt;
+	mpz_init(nt);
+	mpz_set_str(nt, nn, 10);
+	int i = 0;
+	int index = 0; 
+	mpz_t rt;
+	mpz_init(rt);
+	while (mpz_cmp_si(nt, 7) >= 0) {
+		index = i % SZ;
+		mpz_mod_ui(rt, nt, 7);
+		int gs = 0;
+		int ks = mpz_get_ui(rt);
+		switch(ks) {
+			case 0:
+				break;
+			case 1:
+				gs = 3;
+				break;
+			case 2:
+				gs = 2;
+				break;
+			case 3:
+				gs = 1;
+				break;
+			case 4:
+				gs = 3;
+				break;
+			case 5:
+				gs = 2;
+				break;
+			case 6:
+				gs = 1;
+				break;
+		}
+		if (gs == 0) break;
+		double logbase = gs + logT[index];
+		mpz_sub_ui(nt, nt, gs);
+		generate(nn, logbase, /*fout,*/ slopes,  index );
+		i++;
 	}
-	#if 0
+	//#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
 	print(slopes);
-	#endif
+	//	#endif
 	char* hmean = calculateHarmonicMean(slopes);
 	cout <<"\nRoot:\t"<<hmean<<"\n";
 	//	fclose(fout);
@@ -282,6 +315,7 @@ int main() {
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
 	char* hmean = _Factor(nn);
+	cout <<"\nRoot:\t"<<hmean<<"\n";
 	fclose(fp);
 	free(nn);
 	return 0;
