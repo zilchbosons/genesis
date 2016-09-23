@@ -29,18 +29,9 @@
 #include "e.hpp"
 
 #define PREC 4096
-#define GODS_CONSTANT 7 //69384
 
 
 using namespace std;
-#define SZ 5
-#define LS 4
-//int golden_sequence[LS] = { 3, 1, 4, 1, 5 };
-//int golden_sequence[LS] = { 2, 3, 1, 2, 1 };
-int sequence[LS] = { 1, 3, 1, 2 };
-int limit[SZ] = {6,9,3,8,4};
-int baseT[SZ] = {312, 231, 132, 321, 213 };
-double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
 	if (strlen(s)==6 && strstr("Inf", s)) {
@@ -276,18 +267,12 @@ char* _Factor(char* nn) {
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	int l = strlen(nn);
-	int ek =2, pk =3;
 	vector<char*> hmeans;
 	for (int j = 0; j < 5; ++j) {
-                double base = 1;
-		for (int i = 0; i < l; ++i ) {
-			pk = pi[(i)*3+(j)*5] - '0';
-			ek = e[(i)*3+(j)*5]  -'0';
-                        int nk1 = nn[pk % l ] - '0';
-                        int nk2 = nn[(9-ek) % l ] - '0';
-			base = (nk1/nk2) + (nk2/nk1); 
-			double logbase = (base + logT[i % SZ]);
-			generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
+		for (int i = j; i < l; ++i ) {
+			int nk = nn[i] -'0';
+			double logbase = (1.5+.1*nk);
+			generate(nn, logbase, /*fout,*/ slopes,  i % 3 );
 		}
 		cout <<"\nSlopes Recorded are:\t\n";
 		print(slopes);
@@ -296,8 +281,6 @@ char* _Factor(char* nn) {
 		slopes.clear();
 	}
 	char* ahmean = calculateArithmeticMean(hmeans);
-	//	slopes.clear();
-	//	fclose(fout);
 	cout <<"\nAHMean:\t"<<ahmean<<"\n";
 	return ahmean;
 }
@@ -314,6 +297,7 @@ int main() {
 	}
 	cout << "\nNumber read was : \t" << num <<"\n";
 	char* nn = strdup((char*) num.c_str());
+int l = strlen(nn);
 	char* hmean = _Factor(nn);
 	cout <<"\nRoot:\t"<<hmean<<"\n";
 	fclose(fp);
