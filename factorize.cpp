@@ -27,11 +27,12 @@
 #include "common.hpp"
 
 #define PREC 4096
+#define GODS_CONSTANT 69384
 
 using namespace std;
 #define SZ 5
 #define LS 3
-#define OPTLEN 7
+int golden_sequence[LS] = { 2, 3, 1 };
 double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
@@ -255,42 +256,28 @@ char* _Factor(char* nn) {
 	mpz_t nt;
 	mpz_init(nt);
 	mpz_set_str(nt, nn, 10);
-	int i = 0;
-	int index = 0; 
 	mpz_t rt;
 	mpz_init(rt);
-	while (mpz_cmp_si(nt, 7) >= 0) {
-		index = i % SZ;
-		mpz_mod_ui(rt, nt, 7);
-		int gs = 0;
-		int ks = mpz_get_ui(rt);
-		switch(ks) {
-			case 0:
-				break;
-			case 1:
-				gs = 3;
-				break;
-			case 2:
-				gs = 2;
-				break;
-			case 3:
-				gs = 1;
-				break;
-			case 4:
-				gs = 3;
-				break;
-			case 5:
-				gs = 2;
-				break;
-			case 6:
-				gs = 1;
-				break;
-		}
-		if (gs == 0) break;
-		double logbase = gs + logT[index];
-		mpz_sub_ui(nt, nt, gs);
-		generate(nn, logbase, /*fout,*/ slopes,  index );
-		i++;
+	mpz_mod_ui(rt, nt, GODS_CONSTANT);
+	int k = mpz_get_ui(rt);
+	mpfr_t nf;
+	mpfr_init(nf);
+	mpfr_set_str(nf, nn, 10, MPFR_RNDN);
+	mpfr_t rf;
+	mpfr_init(rf);
+	mpfr_log(rf, nf, MPFR_RNDN);
+	mpfr_t cf;
+	mpfr_init(cf);
+	mpfr_set_ui(cf, GODS_CONSTANT, MPFR_RNDN);
+	mpfr_log(cf, cf, MPFR_RNDN);
+	mpfr_div(rf, rf, cf, MPFR_RNDN);
+	mpfr_ui_pow(rf, GODS_CONSTANT, rf, MPFR_RNDN);
+	mpfr_div(rf, nf, rf, MPFR_RNDN);
+	mpfr_get_z(rt, rf, MPFR_RNDN);
+	int g = mpz_get_ui(rt);
+	for (int i = 0; i < g*SZ + k*LS; ++i) {
+		double logbase = golden_sequence[i % LS] + logT[i % SZ];
+		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 	//#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
