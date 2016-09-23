@@ -38,6 +38,7 @@ using namespace std;
 //int golden_sequence[LS] = { 3, 1, 4, 1, 5 };
 //int golden_sequence[LS] = { 2, 3, 1, 2, 1 };
 int sequence[LS] = { 1, 3, 1, 2 };
+int baseT[SZ] = {312, 231, 132, 321, 213 };
 double  logT[SZ] = {0.69384, 0.93846, 0.38469, 0.84693, 0.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
@@ -254,18 +255,18 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 }
 
 char* calculateArithmeticMean(vector<char*> hmeans) {
-int sz = hmeans.size();
-mpz_t term;
-mpz_init(term);
-mpz_t acc;
-mpz_init(acc);
-mpz_set_si(acc, 0);
-for (int i =0; i < sz; ++i) {
-mpz_set_str(term, hmeans.at(i), 10);
-mpz_add(acc, acc, term);
-}
-mpz_div_ui(acc, acc, sz);
-return strdup((char*) mpz_get_str(0, 10, acc));
+	int sz = hmeans.size();
+	mpz_t term;
+	mpz_init(term);
+	mpz_t acc;
+	mpz_init(acc);
+	mpz_set_si(acc, 0);
+	for (int i =0; i < sz; ++i) {
+		mpz_set_str(term, hmeans.at(i), 10);
+		mpz_add(acc, acc, term);
+	}
+	mpz_div_ui(acc, acc, sz);
+	return strdup((char*) mpz_get_str(0, 10, acc));
 
 }
 
@@ -290,13 +291,13 @@ char* _Factor(char* nn) {
 		generate(nn, logbase, /*fout,*/ slopes,  i % SZ );
 	}
 #endif
-vector<char*> hmeans;
+	vector<char*> hmeans;
 	for (int j = 0; j < 5; ++j) {
 		for (int i = 0; i < _g*pk+_k*ek+l*sequence[i % LS]; ++i ) {
 			pk = pi[69384+ek*3000-l*sequence[i % LS]] - '0';
 			ek = e[69384- pk*3000+l*sequence[i % LS]]  -'0';
 			//		int base = (((unsigned long long int)((logT[i % SZ])*100000) + pk*312 + ek*231) % SZ)  ;
-			int base = (((unsigned long long int)((logT[j])*100000)) % SZ)  ;
+			int base = ((((unsigned long long int)((logT[j])*100000)+ek*pk)+(baseT[j]+ek+pk)) % SZ)  ;
 			//		int base = ( pk+ ek ) % SZ;
 			//		int base = ( pk ) % SZ;
 			if ( base <= 0) break;
@@ -319,9 +320,9 @@ vector<char*> hmeans;
 		slopes.clear();
 	}
 	char* ahmean = calculateArithmeticMean(hmeans);
-//	slopes.clear();
+	//	slopes.clear();
 	//	fclose(fout);
-        cout <<"\nAHMean:\t"<<ahmean<<"\n";
+	cout <<"\nAHMean:\t"<<ahmean<<"\n";
 	return ahmean;
 }
 
