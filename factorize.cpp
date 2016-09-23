@@ -62,10 +62,9 @@ int contains(int nk, int& c) {
 	}
 }
 
-char* _Factor(char* nn)  {
+char* _Factor(char* nn, vector<int>& passage)  {
 	int idx = 0;
 	int l = strlen(nn);
-	vector<int> passage;
 	int c = 0;
 	while (idx < l) {
 		int nk = nn[idx] - '0';
@@ -75,16 +74,20 @@ char* _Factor(char* nn)  {
 			passage.push_back(pass);
 		} else {
 			long long acc = nk;
+int preidx = idx;
 			while (idx < l && !(pass= contains(acc, c))) {
 				++idx;
-if ( idx >=l) break;
-				c = (c+1) % 4;
+				if ( idx >=l) break;
+				//c = (c+1) % 4;
 				int pk = sequence[c];
-nk = nn[idx]-'0';
+				nk = nn[idx]-'0';
+				if (nk == 0) nk  = 7;
 				acc += (nk);
 			}
 			if (idx >=l) {
-				passage.push_back(acc);
+for (int g = preidx; g< l;++g) {
+				passage.push_back(nn[g]-'0');
+}
 				print(passage);
 				return "";
 			} else {
@@ -97,6 +100,43 @@ nk = nn[idx]-'0';
 	return "";
 }
 
+bool isPrime(char* nn, vector<int> passage) {
+	int l = strlen(nn);
+	int c = 0;
+	int rem = -1;
+bool oos = false;
+	for (int i = 0; i < passage.size(); ++i) {
+		int pk = passage.at(i);
+pk  = common::reverse_number(pk);
+		while (pk > 0 ) {
+			int rk = pk % 10;
+			if (rk == sequence[c]) {
+				c = (c +1) % 4;
+				rem  = 0;
+			} else {
+				rem = rk;
+oos = true;
+				break;
+			}
+			pk = pk / 10;
+		}
+		if (oos) break;
+	}
+	if (!oos) {
+		rem = 0;
+		for (int j = c; j < 4; ++j) {
+			rem += sequence[c];
+c = (c+1)% 4;
+		}
+	}
+		if (rem % 2 == 1) {
+			return true;
+		} else if (rem % 2 == 0) {
+			return false;
+		}
+return false;
+}
+
 //#if 0
 int main() {
 	/* Step 1: Reading the Number to be factorized */
@@ -107,11 +147,15 @@ int main() {
 	while ((ret=fscanf(fp, "%s", n))!= EOF) {
 		num += n;
 	}
-	cout << "\nNumber read was : \t" << num <<"\n";
-	char* nn = strdup((char*) num.c_str());
+std::string _num = num;
+_num += num;
+	cout << "\nNumber read was : \t" << _num <<"\n";
+	char* nn = strdup((char*) _num.c_str());
 	int l = strlen(nn);
-	char* root = _Factor(nn);
-	cout <<"\nRoot:\t"<<root<<"\n";
+	vector<int> passage;
+	char* root = _Factor(nn, passage);
+	bool is_prime = isPrime(nn, passage);
+	cout <<"\nis_prime:\t"<<is_prime<<"\n";
 	fclose(fp);
 	free(nn);
 	return 0;
