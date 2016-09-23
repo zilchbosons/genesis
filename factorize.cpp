@@ -30,8 +30,7 @@
 
 using namespace std;
 #define SZ 5
-//double  logT[SZ] = {7.69384, 1.93846, 3.38469, 1.84693, 2.46938};
-double  logT[SZ] = {1.69384, 2.93846, 1.38469, 1.84693, 2.46938};
+double  logT[SZ] = {1.69384, 1.93846, 1.38469, 1.84693, 1.46938};
 
 char* transformSlope(char* s, mpfr_exp_t* expt) {
 	if (strlen(s)==6 && strstr("Inf", s)) {
@@ -246,8 +245,12 @@ char* _Factor(char* nn) {
 	cout << "\nNumber read was : \t" << nn <<"\n";
 	vector<char*> slopes;
 	vector<char*> _slopes;
-	for (int i = 0; i < SZ ; ++i) {
-		generate(nn, logT[i], /*fout,*/ slopes, _slopes,  i);
+	int l = strlen(nn);
+	int k = l / 5;
+	int g = l % 5;
+	int iter = k+g;
+	for (int i = 0; i <iter*SZ ; ++i) {
+		generate(nn, logT[i], /*fout,*/ slopes, _slopes,  i % SZ);
 	}
 //#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
