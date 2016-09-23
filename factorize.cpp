@@ -62,7 +62,7 @@ int contains(int nk, int& c) {
 	}
 }
 
-char* _Factor(char* nn, vector<int>& passage)  {
+void _Factor(char* nn, vector<int>& passage)  {
 	int idx = 0;
 	int l = strlen(nn);
 	int c = 0;
@@ -89,7 +89,7 @@ char* _Factor(char* nn, vector<int>& passage)  {
 					passage.push_back(nn[g]-'0');
 				}
 				print(passage);
-				return "";
+				return;
 			} else {
 				passage.push_back(pass);
 			}
@@ -97,7 +97,7 @@ char* _Factor(char* nn, vector<int>& passage)  {
 		++idx;
 	}
 	print(passage);
-	return "";
+	return ;
 }
 
 bool palindrome(vector<int> passage) {
@@ -130,7 +130,7 @@ bool divisible(vector<int> passage) {
 	}
 }
 
-bool isPrime(vector<int> passage) {
+bool _isPrimeHelper(vector<int> passage) {
 	bool isPalindrome = palindrome(passage);
 	bool isDiv7 = divisible(passage);
 	if (!isPalindrome && !isDiv7) {
@@ -143,6 +143,16 @@ bool isPrime(vector<int> passage) {
 		return false;
 	}
 	return false;
+}
+
+bool _isPrime(char* nn) {
+	std::string _num = nn;
+	_num += common::reverse_string(nn);
+	char* ns = strdup((char*) _num.c_str());
+	vector<int> passage;
+	_Factor(ns, passage);
+	bool is_prime = _isPrimeHelper(passage);
+	return is_prime;
 }
 
 #if 0
@@ -163,7 +173,7 @@ int main() {
 	int l = strlen(nn);
 	vector<int> passage;
 	char* root = _Factor(nn, passage);
-	bool is_prime = isPrime(passage);
+	bool is_prime = _isPrime(passage);
 	cout <<"\nis_prime:\t"<<is_prime<<"\n";
 	fclose(fp);
 	free(nn);

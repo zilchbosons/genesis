@@ -3113,9 +3113,7 @@ namespace swig {
 }
 
 
-
-  char* _Factor(char* nn);
-  bool isPrime(char* nn);
+  bool _isPrime(char* nn);
 
 
 SWIGINTERN swig_type_info*
@@ -3233,38 +3231,6 @@ SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
-SWIGINTERNINLINE PyObject *
-SWIG_FromCharPtrAndSize(const char* carray, size_t size)
-{
-  if (carray) {
-    if (size > INT_MAX) {
-      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-      return pchar_descriptor ? 
-	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
-    } else {
-#if PY_VERSION_HEX >= 0x03000000
-#if PY_VERSION_HEX >= 0x03010000
-      return PyUnicode_DecodeUTF8(carray, static_cast< Py_ssize_t >(size), "surrogateescape");
-#else
-      return PyUnicode_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
-#endif
-#else
-      return PyString_FromStringAndSize(carray, static_cast< Py_ssize_t >(size));
-#endif
-    }
-  } else {
-    return SWIG_Py_Void();
-  }
-}
-
-
-SWIGINTERNINLINE PyObject * 
-SWIG_FromCharPtr(const char *cptr)
-{ 
-  return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
-}
-
-
 SWIGINTERNINLINE PyObject*
   SWIG_From_bool  (bool value)
 {
@@ -3274,32 +3240,7 @@ SWIGINTERNINLINE PyObject*
 #ifdef __cplusplus
 extern "C" {
 #endif
-SWIGINTERN PyObject *_wrap__Factor(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  char *arg1 = (char *) 0 ;
-  int res1 ;
-  char *buf1 = 0 ;
-  int alloc1 = 0 ;
-  PyObject * obj0 = 0 ;
-  char *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:_Factor",&obj0)) SWIG_fail;
-  res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_Factor" "', argument " "1"" of type '" "char *""'");
-  }
-  arg1 = reinterpret_cast< char * >(buf1);
-  result = (char *)_Factor(arg1);
-  resultobj = SWIG_FromCharPtr((const char *)result);
-  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return resultobj;
-fail:
-  if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_isPrime(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+SWIGINTERN PyObject *_wrap__isPrime(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   char *arg1 = (char *) 0 ;
   int res1 ;
@@ -3308,13 +3249,13 @@ SWIGINTERN PyObject *_wrap_isPrime(PyObject *SWIGUNUSEDPARM(self), PyObject *arg
   PyObject * obj0 = 0 ;
   bool result;
   
-  if (!PyArg_ParseTuple(args,(char *)"O:isPrime",&obj0)) SWIG_fail;
+  if (!PyArg_ParseTuple(args,(char *)"O:_isPrime",&obj0)) SWIG_fail;
   res1 = SWIG_AsCharPtrAndSize(obj0, &buf1, NULL, &alloc1);
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "isPrime" "', argument " "1"" of type '" "char *""'");
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "_isPrime" "', argument " "1"" of type '" "char *""'");
   }
   arg1 = reinterpret_cast< char * >(buf1);
-  result = (bool)isPrime(arg1);
+  result = (bool)_isPrime(arg1);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   if (alloc1 == SWIG_NEWOBJ) delete[] buf1;
   return resultobj;
@@ -3326,8 +3267,7 @@ fail:
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
-	 { (char *)"_Factor", _wrap__Factor, METH_VARARGS, NULL},
-	 { (char *)"isPrime", _wrap_isPrime, METH_VARARGS, NULL},
+	 { (char *)"_isPrime", _wrap__isPrime, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
