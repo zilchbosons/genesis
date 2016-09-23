@@ -179,15 +179,15 @@ void generate(char* nn, double logT, /*FILE* fout,*/ vector<char*>& slopes, vect
 	mpfr_exp_t expt;
 	char* acctStr = mpfr_get_str(0, &expt, 10, 0, acctf, MPFR_RNDN);
 	char* transformed_slope = transformSlope(acctStr, &expt);
-//#ifdef _DEBUG
+	//#ifdef _DEBUG
 	cout << "\nTransformed Slope: \t"<<transformed_slope<<"\tindex:\t"<<index<<"\n";
-//#endif
+	//#endif
 	char* rotated_slope = rotate(transformed_slope, index % 5, l);
-//#ifdef _DEBUG
+	//#ifdef _DEBUG
 	cout << "\nRotated Slope: \t"<<rotated_slope<<"\n";
-//#endif
+	//#endif
 	slopes.push_back(rotated_slope);
-        _slopes.push_back(common::reverse_string(rotated_slope));
+	_slopes.push_back(common::reverse_string(rotated_slope));
 	mpz_clear(tmp);
 	mpfr_clear(term);
 	mpfr_clear(nt);
@@ -232,7 +232,7 @@ char* calculateHarmonicMean(vector<char*> slopes) {
 	mpfr_set_ui(one, sz, MPFR_RNDN);
 	mpfr_div(term, one, acc, MPFR_RNDN);
 	mpfr_printf("\nHarmonic Mean calculated is :%.2RNf\n",term);
-//	mpfr_sqrt(term, term, MPFR_RNDN);
+	mpfr_sqrt(term, term, MPFR_RNDN);
 	mpfr_exp_t expt;
 	char* ts = mpfr_get_str(0, &expt, 10, 0, term, MPFR_RNDN);
 	char* tone = transformSlope(ts, &expt);
@@ -250,14 +250,15 @@ char* _Factor(char* nn) {
 	int g = l % 5;
 	int iter = k+g;
 	for (int i = 0; i <iter*SZ ; ++i) {
-		generate(nn, logT[i], /*fout,*/ slopes, _slopes,  i % SZ);
+		int index = i % SZ;
+		generate(nn, logT[index], /*fout,*/ slopes, _slopes,  index);
 	}
-//#if 0
+	//#if 0
 	cout <<"\nSlopes Recorded are:\t\n";
 	print(slopes);
-//#endif
+	//#endif
 	char* hmean = calculateHarmonicMean(slopes);
-	//cout <<"\nRoot:\t"<<hmean<<"\n";
+	cout <<"\nRoot:\t"<<hmean<<"\n";
 	//	fclose(fout);
 	return hmean;
 }
