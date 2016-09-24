@@ -50,12 +50,12 @@ int contains(int nk, int& c) {
 		while ( acc < nk) {
 			int  pk2 = sequence[c1];
 			acc += pk2;
-			seq = (seq+ pk2) % 7;
+			seq = (seq+ pk2) ;
 			c1 = (c1 + 1) % 4;
 		}
 		if (acc == nk)  {
 			c = c1;
-			return seq;
+			return (seq );
 		} else {
 			return 0;
 		}
@@ -68,7 +68,10 @@ void _Factor(char* nn, vector<int>& passage)  {
 	int c = 0;
 	while (idx < l) {
 		int nk = nn[idx] - '0';
-		if (nk == 0) nk =7;
+		while ((idx + 1) < l && (nn[idx + 1] - '0') == 0) {
+			nk=(nk*10);
+			++idx;
+		}
 		int pass = 0;
 		if ((pass = contains(nk, c))) {
 			passage.push_back(pass);
@@ -78,10 +81,15 @@ void _Factor(char* nn, vector<int>& passage)  {
 			while (idx < l && !(pass= contains(acc, c))) {
 				++idx;
 				if ( idx >=l) break;
-				//c = (c+1) % 4;
 				int pk = sequence[c];
 				nk = nn[idx]-'0';
-				if (nk == 0) nk  = 7;
+				while ((idx ) < l && (nn[idx ] - '0') == 0) {
+					acc= acc*10;
+					if ((nn[idx+1]-'0') != 0) {
+						break;
+					}
+					++idx;
+				}
 				acc += (nk);
 			}
 			if (idx >=l) {
@@ -100,49 +108,34 @@ void _Factor(char* nn, vector<int>& passage)  {
 	return ;
 }
 
-bool palindrome(vector<int> passage) {
-	int lb = 0;
-	int ub = passage.size()-1;
-	int i = lb, j= ub;
-	for (; i < j; ++i, --j) {
-		if (passage.at(i) == passage.at(j)) {
-			continue;
-		} else {
-			return false;
-		}
-	}
-	return true;
-}
-
-bool divisible(vector<int> passage) {
+bool divisible(char* nn, vector<int> passage) {
 	mpz_t pt;
 	mpz_init(pt);
 	mpz_set_si(pt, 0);
 	for (int i = 0; i< passage.size(); ++i) {
-		mpz_mul_ui(pt, pt, 10);
 		mpz_add_ui(pt, pt, passage.at(i));
 	}
-	mpz_mod_ui(pt, pt, 7);
-	if (mpz_cmp_si(pt, 0)==0) {
-		return true;
-	} else {
+int pt2 = mpz_get_ui(pt);
+if (common::_isPrime(pt2+passage.size()) && !common::_riemannExists(pt2*passage.size())) {
 		return false;
+	} else {
+if (passage.size()> 1 && (pt2 % (passage.size())) == 0) {
+return true;
+} else if (passage.size()==1) {
+return false;
+} else {
+		return true;
 	}
 }
+}
 
-bool _isPrimeHelper(vector<int> passage) {
-	bool isPalindrome = palindrome(passage);
-	bool isDiv7 = divisible(passage);
-	if (!isPalindrome && !isDiv7) {
+bool _isPrimeHelper(char* nn, vector<int> passage) {
+	bool isDiv7 = divisible(nn, passage);
+	if (!isDiv7) {
 		return true;
-	}else if (isPalindrome && isDiv7) {
-		return true;
-	}else if (!isPalindrome && isDiv7) {
-		return false;
-	} else if (isPalindrome && !isDiv7) {
-		return false;
-	}
+	} else {
 	return false;
+}
 }
 
 bool _isPrime(char* nn) {
@@ -151,11 +144,11 @@ bool _isPrime(char* nn) {
 	char* ns = strdup((char*) _num.c_str());
 	vector<int> passage;
 	_Factor(ns, passage);
-	bool is_prime = _isPrimeHelper(passage);
+	bool is_prime = _isPrimeHelper(nn, passage);
 	return is_prime;
 }
 
-#if 0
+//#if 0
 int main() {
 	/* Step 1: Reading the Number to be factorized */
 	FILE* fp = fopen("./input.txt", "r");
@@ -167,16 +160,10 @@ int main() {
 	}
 	char* nn = strdup((char*) num.c_str());
 	cout <<"\nNumber read was:\t"<<nn<<"\n";
-	std::string _num = num;
-	_num += common::reverse_string(nn);
-	nn = strdup((char*) _num.c_str());
-	int l = strlen(nn);
-	vector<int> passage;
-	char* root = _Factor(nn, passage);
-	bool is_prime = _isPrime(passage);
+	bool is_prime = _isPrime(nn);
 	cout <<"\nis_prime:\t"<<is_prime<<"\n";
 	fclose(fp);
 	free(nn);
 	return 0;
 }
-#endif
+//#endif
