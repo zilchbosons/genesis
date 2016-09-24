@@ -31,121 +31,52 @@
 using namespace std;
 int sequence[4] = {1, 3, 1, 2};
 
-void print(vector<int> passage) {
+
+void print(vector<int> _passage) {
+	for (int i = 0; i < _passage.size(); ++i ) {
+		cout << _passage[i]<<"\t,\t";
+	}
+	cout << "\n";
+}
+
+void print(vector<char*> passage) {
 	for (int i = 0; i < passage.size(); ++i ) {
 		cout << passage[i]<<"\t,\t";
 	}
 	cout << "\n";
 }
 
-int contains(int nk, int& c) {
-	int pk = sequence[c];
-	if (pk == nk) {
-		c  =(c + 1) % 4;
-		return pk;
+bool isFit(int sum) {
+	unsigned long long int acc = 0;
+	int index1 = 0, index2 = sum;
+	while (acc < sum) {
+		int term= (pi[index1]-'0');
+		acc+=term;
+		sum -= (e[index2]-'0');
+		++index1;--index2;
+	}
+	if (acc == sum) { 
+		return true;
 	} else {
-		int acc = 0;
-		int c1 = c; 
-		int seq = 0;
-		while ( acc < nk) {
-			int  pk2 = sequence[c1];
-			acc += pk2;
-			seq = (seq+ pk2) ;
-			c1 = (c1 + 1) % 4;
-		}
-		if (acc == nk)  {
-			c = c1;
-			return (seq );
-		} else {
-			return 0;
-		}
-	}
-}
-
-void _Factor(char* nn, vector<int>& passage)  {
-	int idx = 0;
-	int l = strlen(nn);
-	int c = 0;
-	while (idx < l) {
-		int nk = nn[idx] - '0';
-		while ((idx + 1) < l && (nn[idx + 1] - '0') == 0) {
-			nk=(nk*10);
-			++idx;
-		}
-		int pass = 0;
-		if ((pass = contains(nk, c))) {
-			passage.push_back(pass);
-		} else {
-			long long acc = nk;
-			int preidx = idx;
-			while (idx < l && !(pass= contains(acc, c))) {
-				++idx;
-				if ( idx >=l) break;
-				int pk = sequence[c];
-				nk = nn[idx]-'0';
-				while ((idx ) < l && (nn[idx ] - '0') == 0) {
-					acc= acc*10;
-					if ((nn[idx+1]-'0') != 0) {
-						break;
-					}
-					++idx;
-				}
-				acc += (nk);
-			}
-			if (idx >=l) {
-				for (int g = preidx; g< l;++g) {
-					passage.push_back(nn[g]-'0');
-				}
-				print(passage);
-				return;
-			} else {
-				passage.push_back(pass);
-			}
-		}
-		++idx;
-	}
-	print(passage);
-	return ;
-}
-
-bool divisible(char* nn, vector<int> passage) {
-	mpz_t pt;
-	mpz_init(pt);
-	mpz_set_si(pt, 0);
-	for (int i = 0; i< passage.size(); ++i) {
-		mpz_add_ui(pt, pt, passage.at(i));
-	}
-int pt2 = mpz_get_ui(pt);
-if (common::_isPrime(pt2+passage.size()) && !common::_riemannExists(pt2*passage.size())) {
+		cout << acc-sum <<"\n";
 		return false;
-	} else {
-if (passage.size()> 1 && (pt2 % (passage.size())) == 0) {
-return true;
-} else if (passage.size()==1) {
-return false;
-} else {
-		return true;
 	}
 }
-}
 
-bool _isPrimeHelper(char* nn, vector<int> passage) {
-	bool isDiv7 = divisible(nn, passage);
-	if (!isDiv7) {
-		return true;
+char* _isPrime(char* nn) {
+	bool fits = isFit(5*atoi(nn));
+	if (fits) {
+		cout <<"\nFit.\n";
 	} else {
-	return false;
-}
-}
-
-bool _isPrime(char* nn) {
-	std::string _num = nn;
-	_num += common::reverse_string(nn);
-	char* ns = strdup((char*) _num.c_str());
-	vector<int> passage;
-	_Factor(ns, passage);
-	bool is_prime = _isPrimeHelper(nn, passage);
-	return is_prime;
+		cout <<"\nNot Fit.\n";
+	}
+	fits = isFit(atoi(nn));
+	if (fits) {
+		cout <<"\nFit.\n";
+	} else {
+		cout <<"\nNot Fit.\n";
+	}
+	return 0;
 }
 
 //#if 0
@@ -160,8 +91,12 @@ int main() {
 	}
 	char* nn = strdup((char*) num.c_str());
 	cout <<"\nNumber read was:\t"<<nn<<"\n";
-	bool is_prime = _isPrime(nn);
-	cout <<"\nis_prime:\t"<<is_prime<<"\n";
+	char* is_prime = _isPrime(nn);
+	if (is_prime) {
+		cout <<"\nRoot:\t"<<is_prime<<"\n";
+	} else {
+		cout << "\nNumber \t"<<nn<<"\t is prime.\n";
+	}
 	fclose(fp);
 	free(nn);
 	return 0;
