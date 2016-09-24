@@ -46,32 +46,51 @@ void print(vector<char*> passage) {
 	cout << "\n";
 }
 
-bool isFit(int sum) {
+bool _isFit(int off, int sum) {
 	unsigned long long int acc = 0;
-	int index1 = 0, index2 = 0;
+	int index1 = off, index2 = off;
 	while (acc < sum) {
-		int term= (pi[index1]-'0');
+		int term= (e[index1]-'0');
 		acc+=term;
-//		sum -= (e[index2]-'0');
 		++index1;++index2;
 	}
 	if (acc == sum) { 
 		return true;
 	} else {
-	//	cout << acc-sum <<"\n";
+		return false;
+	}
+}
+
+bool isFit(int off, int sum) {
+	unsigned long long int acc = 0;
+	int index1 = off, index2 = off;
+	while (acc < sum) {
+		int term= (pi[index1]-'0');
+		acc+=term;
+		++index1;++index2;
+	}
+	if (acc == sum) { 
+		return true;
+	} else {
 		return false;
 	}
 }
 
 char* _isPrime(char* nn) {
-for (int i = 1; i<10; ++i) {
-	bool fits = isFit(i*atoi(nn));
-	if (fits) {
-		cout <<"\n"<<i<<"\tFit.\n";
-	} else {
-		cout <<"\n"<<i<<"\tNot Fit.\n";
+	for (int i = 0; i<30; ++i) {
+		bool fits = isFit(i,atoi(nn));
+		if (fits) {
+			cout <<"\n"<<i<<"\tFit.\n";
+		} else {
+			cout <<"\n"<<i<<"\tNot Fit.\n";
+		}
+		bool _fits = _isFit(i,atoi(nn));
+		if (_fits) {
+			cout <<"\n"<<i<<"\t_Fit.\n";
+		} else {
+			cout <<"\n"<<i<<"\t_Not Fit.\n";
+		}
 	}
-}
 	return 0;
 }
 
