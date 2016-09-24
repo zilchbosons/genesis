@@ -48,34 +48,30 @@ void print(vector<char*> passage) {
 
 bool isFit(int sum) {
 	unsigned long long int acc = 0;
-	int index1 = 0, index2 = sum;
+	int index1 = 0, index2 = 0;
 	while (acc < sum) {
 		int term= (pi[index1]-'0');
 		acc+=term;
-		sum -= (e[index2]-'0');
-		++index1;--index2;
+//		sum -= (e[index2]-'0');
+		++index1;++index2;
 	}
 	if (acc == sum) { 
 		return true;
 	} else {
-		cout << acc-sum <<"\n";
+	//	cout << acc-sum <<"\n";
 		return false;
 	}
 }
 
 char* _isPrime(char* nn) {
-	bool fits = isFit(5*atoi(nn));
+for (int i = 1; i<10; ++i) {
+	bool fits = isFit(i*atoi(nn));
 	if (fits) {
-		cout <<"\nFit.\n";
+		cout <<"\n"<<i<<"\tFit.\n";
 	} else {
-		cout <<"\nNot Fit.\n";
+		cout <<"\n"<<i<<"\tNot Fit.\n";
 	}
-	fits = isFit(atoi(nn));
-	if (fits) {
-		cout <<"\nFit.\n";
-	} else {
-		cout <<"\nNot Fit.\n";
-	}
+}
 	return 0;
 }
 
