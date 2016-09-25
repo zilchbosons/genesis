@@ -84,9 +84,9 @@ int fits(int offset, int start, char* nn) {
 	int sum = 0;
 	for (int i = start; i < strlen(nn); ++i) {
 int nk = nn[i]-'0';
-if (sum > 0 && sum % 7 == 0) {
-sum = 0;
-offset+=69384;
+if (cnt % 3 == 0) {
+    cnt  = 0;
+sum %= 7;
 }
 		sum =sum*10 + (nk);
 	}
