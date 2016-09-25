@@ -82,12 +82,14 @@ bool divisibleBy7(char* nn) {
 
 int fits(int offset, int start, char* nn) {
 	int sum = 0;
+	int epoch = 0;
 	for (int i = start; i < strlen(nn); ++i) {
-int nk = nn[i]-'0';
-if (sum > 0 && sum % 7 == 0) {
-sum = 0;
-offset+=69384;
-}
+		int nk = nn[i]-'0';
+		if (sum > 0 && sum % 7 == 0) {
+			sum = 0;
+			offset+=69384;
+			++epoch;
+		}
 		sum =sum*10 + (nk);
 	}
 	long long int acc = 0;
@@ -95,13 +97,15 @@ offset+=69384;
 	while (acc < sum) {
 		int pk = pi[index]-'0';
 		acc += pk;
-++index;
+		++index;
 	}
 	if (acc ==sum) {
-		cout << "\nsum=\t"<<sum<<"\noffset=\t"<<offset<<"\nend:\t"<<index<<"\n";
-return 1;
+		offset = offset - epoch*69384;
+		index = index - epoch*69384;
+		cout << "\nepoch:\t"<<epoch<<"\tsum=\t"<<sum<<"\toffset=\t"<<offset<<"\tend:\t"<<index<<"\n";
+		return 1;
 	}
-return 0;
+	return 0;
 
 }
 
@@ -120,8 +124,8 @@ int main() {
 	int l = strlen(nn);
 	for (int j = l-1; j >=0; --j) {
 		for (int i = 0; i < 10; ++i) {
-	int fit =		fits(i, j, nn);
-if (fit) break;
+			int fit =		fits(i, j, nn);
+			if (fit) break;
 		}
 	}
 	fclose(fp);
