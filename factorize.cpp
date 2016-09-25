@@ -82,8 +82,14 @@ bool divisibleBy7(char* nn) {
 
 int fits(int offset, int start, char* nn) {
 	int sum = 0;
-	for (int i = start; i < strlen(nn); ++i) {
-		sum =sum*10 + (nn[i]-'0');
+int cnt = 0;
+	for (int i = start; i < strlen(nn); ++i, ++cnt) {
+int nk = nn[i]-'0';
+if (cnt % 3 == 0) {
+    cnt  = 0;
+sum %= 7;
+}
+		sum =sum*10 + (nk);
 	}
 	long long int acc = 0;
 	int index = offset;
