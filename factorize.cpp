@@ -29,69 +29,55 @@
 #include "e.hpp"
 
 using namespace std;
-int sequence[4] = {1, 3, 1, 2};
+#define OPTLEN 5
+#define PREC 4096
 
+int sequence[5] = {-1, 2, 3, 1, -3};
 
-void print(vector<int> _passage) {
-	for (int i = 0; i < _passage.size(); ++i ) {
-		cout << _passage[i]<<"\t,\t";
-	}
-	cout << "\n";
+char* factorizeEQ5(char* nn) {
+    char* pivot = new char[6];
+    pivot[5] = '\0';
+    for (int i = 0; i < OPTLEN; ++i) {
+        int nk = nn[i] - '0';
+        int sk = sequence[i];
+        if ((nk + sk)>10) {
+           pivot[i] = '0' + ((nk + sk) % 7);
+        } else if ((nk+sk)==0) {
+           pivot[i] = '0' + 7;
+        } else {
+           pivot[i] = '0' + (nk + sk);
+        }
+    }
+    mpfr_t pt;
+    mpfr_init2(pt, PREC);
+    mpfr_set_str(pt, pivot, 10, MPFR_RNDN);
+    mpfr_log(pt, pt, MPFR_RNDN);
+    mpfr_t cons;
+    mpfr_init(cons);
+    mpfr_set_ui(cons, 69384, MPFR_RNDN);        
+    mpfr_log(cons, cons, MPFR_RNDN);
+    mpfr_mul(cons, cons, pt, MPFR_RNDN);
+    mpfr_add_ui(cons, cons, 1, MPFR_RNDN);
+    mpfr_printf("\n%.2RNf\n",cons);
+    return 0;
 }
 
-void print(vector<char*> passage) {
-	for (int i = 0; i < passage.size(); ++i ) {
-		cout << passage[i]<<"\t,\t";
-	}
-	cout << "\n";
+char* factorizeLT5(char* nn) {
 }
 
-bool _isFit(int off, int sum) {
-	unsigned long long int acc = 0;
-	int index1 = off, index2 = off;
-	while (acc < sum) {
-		int term= (e[index1]-'0');
-		acc+=term;
-		++index1;++index2;
-	}
-	if (acc == sum) { 
+char* factorizeGT5(char* nn) {
+}
+
+bool divisibleBy7(char* nn) {
+	mpz_t nt;
+	mpz_init(nt);
+	mpz_set_str(nt, nn, 10);
+	mpz_mod_ui(nt, nt, 7);
+	if (mpz_cmp_si(nt, 7)==0) {
 		return true;
 	} else {
 		return false;
 	}
-}
-
-bool isFit(int off, int sum) {
-	unsigned long long int acc = 0;
-	int index1 = off, index2 = off;
-	while (acc < sum) {
-		int term= (pi[index1]-'0');
-		acc+=term;
-		++index1;++index2;
-	}
-	if (acc == sum) { 
-		return true;
-	} else {
-		return false;
-	}
-}
-
-char* _isPrime(char* nn) {
-	for (int i = 0; i<30; ++i) {
-		bool fits = isFit(i,atoi(nn));
-		if (fits) {
-			cout <<"\n"<<i<<"\tFit.\n";
-		} else {
-			cout <<"\n"<<i<<"\tNot Fit.\n";
-		}
-		bool _fits = _isFit(i,atoi(nn));
-		if (_fits) {
-			cout <<"\n"<<i<<"\t_Fit.\n";
-		} else {
-			cout <<"\n"<<i<<"\t_Not Fit.\n";
-		}
-	}
-	return 0;
 }
 
 //#if 0
@@ -106,11 +92,17 @@ int main() {
 	}
 	char* nn = strdup((char*) num.c_str());
 	cout <<"\nNumber read was:\t"<<nn<<"\n";
-	char* is_prime = _isPrime(nn);
-	if (is_prime) {
-		cout <<"\nRoot:\t"<<is_prime<<"\n";
+	if (divisibleBy7(nn)) {
+		cout <<"\n7 is factor.\n";
 	} else {
-		cout << "\nNumber \t"<<nn<<"\t is prime.\n";
+		int l = strlen(nn);
+		if (l == OPTLEN)  {
+			factorizeEQ5(nn);
+		} else if (l < OPTLEN) {
+			factorizeLT5(nn);
+		} else {
+			factorizeGT5(nn);
+		}
 	}
 	fclose(fp);
 	free(nn);
