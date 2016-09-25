@@ -35,31 +35,31 @@ using namespace std;
 int sequence[5] = {-1, 2, 3, 1, -3};
 
 char* factorizeEQ5(char* nn) {
-	char* pivot = new char[6];
-	pivot[5] = '\0';
-	for (int i = 0; i < OPTLEN; ++i) {
-		int nk = nn[i] - '0';
-		int sk = sequence[i];
-		if ((nk + sk)>10) {
-			pivot[i] = '0' + ((nk + sk) % 7);
-		} else if ((nk+sk)==0) {
-			pivot[i] = '0' + 7;
-		} else {
-			pivot[i] = '0' + (nk + sk);
-		}
-	}
-	mpfr_t pt;
-	mpfr_init2(pt, PREC);
-	mpfr_set_str(pt, pivot, 10, MPFR_RNDN);
-	mpfr_log(pt, pt, MPFR_RNDN);
-	mpfr_t cons;
-	mpfr_init(cons);
-	mpfr_set_ui(cons, 69384, MPFR_RNDN);        
-	mpfr_log(cons, cons, MPFR_RNDN);
-	mpfr_mul(cons, cons, pt, MPFR_RNDN);
-	mpfr_add_ui(cons, cons, 1, MPFR_RNDN);
-	mpfr_printf("\n%.2RNf\n",cons);
-	return 0;
+    char* pivot = new char[6];
+    pivot[5] = '\0';
+    for (int i = 0; i < OPTLEN; ++i) {
+        int nk = nn[i] - '0';
+        int sk = sequence[i];
+        if ((nk + sk)>10) {
+           pivot[i] = '0' + ((nk + sk) % 7);
+        } else if ((nk+sk)==0) {
+           pivot[i] = '0' + 7;
+        } else {
+           pivot[i] = '0' + (nk + sk);
+        }
+    }
+    mpfr_t pt;
+    mpfr_init2(pt, PREC);
+    mpfr_set_str(pt, pivot, 10, MPFR_RNDN);
+    mpfr_log(pt, pt, MPFR_RNDN);
+    mpfr_t cons;
+    mpfr_init(cons);
+    mpfr_set_ui(cons, 69384, MPFR_RNDN);        
+    mpfr_log(cons, cons, MPFR_RNDN);
+    mpfr_mul(cons, cons, pt, MPFR_RNDN);
+    mpfr_add_ui(cons, cons, 1, MPFR_RNDN);
+    mpfr_printf("\n%.2RNf\n",cons);
+    return 0;
 }
 
 char* factorizeLT5(char* nn) {
@@ -80,26 +80,6 @@ bool divisibleBy7(char* nn) {
 	}
 }
 
-int fits(int offset, int start, char* nn) {
-	int sum = 0;
-	for (int i = start; i < strlen(nn); ++i) {
-		sum =sum*10 + (nn[i]-'0');
-	}
-	long long int acc = 0;
-	int index = offset;
-	while (acc < sum) {
-		int pk = pi[index]-'0';
-		acc += pk;
-++index;
-	}
-	if (acc ==sum) {
-		cout << "\nsum=\t"<<sum<<"\noffset=\t"<<offset<<"\nend:\t"<<index<<"\n";
-return 1;
-	}
-return 0;
-
-}
-
 //#if 0
 int main() {
 	/* Step 1: Reading the Number to be factorized */
@@ -112,11 +92,16 @@ int main() {
 	}
 	char* nn = strdup((char*) num.c_str());
 	cout <<"\nNumber read was:\t"<<nn<<"\n";
-	int l = strlen(nn);
-	for (int j = l-1; j >=0; --j) {
-		for (int i = 0; i < 10; ++i) {
-	int fit =		fits(i, j, nn);
-if (fit) break;
+	if (divisibleBy7(nn)) {
+		cout <<"\n7 is factor.\n";
+	} else {
+		int l = strlen(nn);
+		if (l == OPTLEN)  {
+			factorizeEQ5(nn);
+		} else if (l < OPTLEN) {
+			factorizeLT5(nn);
+		} else {
+			factorizeGT5(nn);
 		}
 	}
 	fclose(fp);
