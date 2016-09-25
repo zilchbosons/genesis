@@ -80,7 +80,44 @@ bool divisibleBy7(char* nn) {
 	}
 }
 
-int fits(int offset, int start, char* nn) {
+int fits(unsigned long long int offset, int start, char* nn) {
+	mpz_t sum;
+	mpz_init(sum);
+	mpz_set_si(sum, 0);
+	mpz_t rt;
+	mpz_init(rt);
+	int epoch = 0;
+	for (int i = start; i < strlen(nn); ++i) {
+		int nk = nn[i]-'0';
+		mpz_mod_ui(rt, sum , 7);
+		if (mpz_cmp_si(sum, 0) > 0  && mpz_cmp_si(rt, 0) ==0) {
+			mpz_set_si(sum , 0);
+			offset+=69384;
+			++epoch;
+		}
+		mpz_mul_ui(sum , sum, 10);
+		mpz_add_ui(sum, sum, nk);
+	}
+	mpz_t acc;
+	mpz_init(acc);
+	mpz_set_si(acc, 0);
+	unsigned long long int index = offset;
+	while (mpz_cmp(acc, sum)<0) {
+		int pk = pi[index]-'0';
+		mpz_add_ui(acc, acc, pk);
+		++index;
+	}
+	if (mpz_cmp(acc,sum)==0) {
+		offset = offset - epoch*69384;
+		index = index - epoch*69384;
+		cout << "\nepoch:\t"<<epoch<<"\tsum=\t"<<sum<<"\toffset=\t"<<offset<<"\tend:\t"<<index<<"\n";
+		return 1;
+	}
+	return 0;
+
+}
+
+int _fits(int offset, int start, char* nn) {
 	int sum = 0;
 	int epoch = 0;
 	for (int i = start; i < strlen(nn); ++i) {
@@ -124,7 +161,7 @@ int main() {
 	int l = strlen(nn);
 	for (int j = l-1; j >=0; --j) {
 		for (int i = 0; i < 10; ++i) {
-			int fit =		fits(i, j, nn);
+			int fit = fits(i, j, nn);
 			if (fit) break;
 		}
 	}
